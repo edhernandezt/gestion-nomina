@@ -1,12 +1,8 @@
 package co.edu.unbosque.gestion_nomina.model.dto;
 
-import jakarta.persistence.*;
-
 public class ArlDTO {
 
-
         private Integer idArl;
-
 
         private String nombreArl;
 
