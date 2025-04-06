@@ -39,14 +39,13 @@ public class CargoService implements ICrud<CargoDTO, Integer> {
     }
 
     @Override
-    public CargoDTO update(Integer id, CargoDTO objetoDTO) {
+    public void update(Integer id, CargoDTO objetoDTO) {
         Cargo cargo = cargoRepository.findById(id)
                 .orElseThrow(() -> new CargoException("No se puede actualizar. Cargo con ID " + id + " no existe"));
 
         cargo.setNombre(objetoDTO.getNombre());
 
-        Cargo actualizado = cargoRepository.save(cargo);
-        return modelMapper.map(actualizado, CargoDTO.class);
+        cargoRepository.save(cargo);
     }
 
     @Override

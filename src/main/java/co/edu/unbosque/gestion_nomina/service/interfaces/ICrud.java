@@ -7,7 +7,7 @@ public interface ICrud <T,K> {
 
     void create(T objetoDTO);
     Optional<T> find(K id);
-    T update(K id, T objetoDTO);
+    void update(K id, T objetoDTO);
     void delete(K id);
     List<T> findAll();
 }
