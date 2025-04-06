@@ -1,0 +1,151 @@
+package co.edu.unbosque.gestion_nomina.entity;
+
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "deducciones")
+public class Deduccion {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_deduccion")
+    private Integer idDeduccion;
+
+    @OneToOne
+    @JoinColumn(name = "id_devengado", unique = true)
+    private Devengado devengado;
+
+    @Column(name = "salud")
+    private BigDecimal salud;
+
+    @Column(name = "pension")
+    private BigDecimal pension;
+
+    @Column(name = "fondo_solidaridad")
+    private BigDecimal fondoSolidaridad;
+
+    @Column(name = "rete_fuente")
+    private BigDecimal reteFuente;
+
+    @Column(name = "salud_prepagada")
+    private BigDecimal saludPrepagada;
+
+    @Column(name = "aportes_voluntarios")
+    private BigDecimal aportesVoluntarios;
+
+    @Column(name = "prestamos")
+    private BigDecimal prestamos;
+
+    @Column(name = "descuentos_dias")
+    private BigDecimal descuentosDias;
+
+    @Column(name = "total_deducciones")
+    private BigDecimal totalDeducciones;
+
+    public Deduccion() {
+    }
+
+    public Deduccion(Devengado devengado, BigDecimal salud, BigDecimal pension, BigDecimal fondoSolidaridad, BigDecimal reteFuente,
+                     BigDecimal saludPrepagada, BigDecimal aportesVoluntarios, BigDecimal prestamos,
+                     BigDecimal descuentosDias, BigDecimal totalDeducciones) {
+        this.devengado = devengado;
+        this.salud = salud;
+        this.pension = pension;
+        this.fondoSolidaridad = fondoSolidaridad;
+        this.reteFuente = reteFuente;
+        this.saludPrepagada = saludPrepagada;
+        this.aportesVoluntarios = aportesVoluntarios;
+        this.prestamos = prestamos;
+        this.descuentosDias = descuentosDias;
+        this.totalDeducciones = totalDeducciones;
+    }
+
+    public Integer getIdDeduccion() {
+        return idDeduccion;
+    }
+
+    public void setIdDeduccion(Integer idDeduccion) {
+        this.idDeduccion = idDeduccion;
+    }
+
+    public Devengado getDevengado() {
+        return devengado;
+    }
+
+    public void setDevengado(Devengado devengado) {
+        this.devengado = devengado;
+    }
+
+    public BigDecimal getSalud() {
+        return salud;
+    }
+
+    public void setSalud(BigDecimal salud) {
+        this.salud = salud;
+    }
+
+    public BigDecimal getPension() {
+        return pension;
+    }
+
+    public void setPension(BigDecimal pension) {
+        this.pension = pension;
+    }
+
+    public BigDecimal getFondoSolidaridad() {
+        return fondoSolidaridad;
+    }
+
+    public void setFondoSolidaridad(BigDecimal fondoSolidaridad) {
+        this.fondoSolidaridad = fondoSolidaridad;
+    }
+
+    public BigDecimal getReteFuente() {
+        return reteFuente;
+    }
+
+    public void setReteFuente(BigDecimal reteFuente) {
+        this.reteFuente = reteFuente;
+    }
+
+    public BigDecimal getSaludPrepagada() {
+        return saludPrepagada;
+    }
+
+    public void setSaludPrepagada(BigDecimal saludPrepagada) {
+        this.saludPrepagada = saludPrepagada;
+    }
+
+    public BigDecimal getAportesVoluntarios() {
+        return aportesVoluntarios;
+    }
+
+    public void setAportesVoluntarios(BigDecimal aportesVoluntarios) {
+        this.aportesVoluntarios = aportesVoluntarios;
+    }
+
+    public BigDecimal getPrestamos() {
+        return prestamos;
+    }
+
+    public void setPrestamos(BigDecimal prestamos) {
+        this.prestamos = prestamos;
+    }
+
+    public BigDecimal getDescuentosDias() {
+        return descuentosDias;
+    }
+
+    public void setDescuentosDias(BigDecimal descuentosDias) {
+        this.descuentosDias = descuentosDias;
+    }
+
+    public BigDecimal getTotalDeducciones() {
+        return totalDeducciones;
+    }
+
+    public void setTotalDeducciones(BigDecimal totalDeducciones) {
+        this.totalDeducciones = totalDeducciones;
+    }
+}
