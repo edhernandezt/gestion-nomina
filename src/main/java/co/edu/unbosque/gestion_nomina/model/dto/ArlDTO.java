@@ -1,34 +1,29 @@
 package co.edu.unbosque.gestion_nomina.model.dto;
 
-import jakarta.persistence.*;
-
 public class ArlDTO {
+    private Integer idArl;
+    private String nombreArl;
 
+    public ArlDTO() {}
 
-        private Integer idArl;
+    public ArlDTO(Integer idArl, String nombreArl) {
+        this.idArl = idArl;
+        this.nombreArl = nombreArl;
+    }
 
+    public Integer getIdArl() {
+        return idArl;
+    }
 
-        private String nombreArl;
+    public void setIdArl(Integer idArl) {
+        this.idArl = idArl;
+    }
 
-        public ArlDTO() {}
+    public String getNombreArl() {
+        return nombreArl;
+    }
 
-        public ArlDTO(String nombreArl) {
-            this.nombreArl = nombreArl;
-        }
-
-        public Integer getIdArl() {
-            return idArl;
-        }
-
-        public void setIdArl(Integer idArl) {
-            this.idArl = idArl;
-        }
-
-        public String getNombreArl() {
-            return nombreArl;
-        }
-
-        public void setNombreArl(String nombreArl) {
-            this.nombreArl = nombreArl;
-        }
+    public void setNombreArl(String nombreArl) {
+        this.nombreArl = nombreArl;
+    }
 }
