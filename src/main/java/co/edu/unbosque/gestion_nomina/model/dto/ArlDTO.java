@@ -1,30 +1,29 @@
 package co.edu.unbosque.gestion_nomina.model.dto;
 
 public class ArlDTO {
+    private Integer idArl;
+    private String nombreArl;
 
-        private Integer idArl;
+    public ArlDTO() {}
 
-        private String nombreArl;
+    public ArlDTO(Integer idArl, String nombreArl) {
+        this.idArl = idArl;
+        this.nombreArl = nombreArl;
+    }
 
-        public ArlDTO() {}
+    public Integer getIdArl() {
+        return idArl;
+    }
 
-        public ArlDTO(String nombreArl) {
-            this.nombreArl = nombreArl;
-        }
+    public void setIdArl(Integer idArl) {
+        this.idArl = idArl;
+    }
 
-        public Integer getIdArl() {
-            return idArl;
-        }
+    public String getNombreArl() {
+        return nombreArl;
+    }
 
-        public void setIdArl(Integer idArl) {
-            this.idArl = idArl;
-        }
-
-        public String getNombreArl() {
-            return nombreArl;
-        }
-
-        public void setNombreArl(String nombreArl) {
-            this.nombreArl = nombreArl;
-        }
+    public void setNombreArl(String nombreArl) {
+        this.nombreArl = nombreArl;
+    }
 }
