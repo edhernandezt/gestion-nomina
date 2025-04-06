@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface ICrud <T,K> {
 
-    T create(T objetoDTO);
+    void create(T objetoDTO);
     Optional<T> find(K id);
     T update(K id, T objetoDTO);
     void delete(K id);
