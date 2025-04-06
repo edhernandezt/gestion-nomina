@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Crear Empleado</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+
+<div class="contenedor-formulario">
+    <h2>Crear Nuevo Empleado</h2>
+    <form class="formulario-empleado" th:action="@{/empleados/crear}" method="post">
+        <div class="campo-formulario">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre">
+        </div>
+        <div class="campo-formulario">
+            <label for="cargo">Cargo:</label>
+            <input type="text" id="cargo" name="cargo">
+        </div>
+        <div class="campo-formulario">
+            <label for="salario">Salario:</label>
+            <input type="text" id="salario" name="salario">
+        </div>
+        <div class="campo-formulario">
+            <label for="fechaIngreso">Fecha de Ingreso:</label>
+            <input type="date" id="fechaIngreso" name="fechaIngreso">
+        </div>
+        <div class="botones-formulario">
+            <button class="btn-control" type="submit">Guardar</button>
+            <a href="/empleados" class="boton-volver">← Cancelar</a>
+        </div>
+    </form>
+</div>
+
+
+</body>
+</html>

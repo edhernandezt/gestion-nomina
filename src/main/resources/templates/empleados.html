@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Empleados</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script>
+        function abrirModalCrear() {
+            document.getElementById("modalCrear").style.display = "block";
+        }
+
+        function abrirModalDetalle(button) {
+            document.getElementById("detalleNombre").textContent = button.getAttribute("data-nombre");
+            document.getElementById("detalleCargo").textContent = button.getAttribute("data-cargo");
+            document.getElementById("detalleSalario").textContent = button.getAttribute("data-salario");
+            document.getElementById("detalleFecha").textContent = button.getAttribute("data-fecha");
+            document.getElementById("modalDetalle").style.display = "block";
+        }
+
+        function cerrarModal(id) {
+            document.getElementById(id).style.display = "none";
+        }
+    </script>
+</head>
+<body>
+
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+<main class="container">
+    <h4 class="titulo-reporte">Lista de Empleados</h4>
+
+    <div class="empleados-barra-controles">
+        <input type="text" placeholder="Buscar por nombre o cargo" id="busquedaEmpleado" class="campo-busqueda"/>
+
+        <div class="grupo-botones">
+            <button class="btn-control">Ordenar por salario</button>
+            <button onclick="abrirModalCrear()" class="btn-control">+ Crear Empleado</button>
+        </div>
+    </div>
+
+    <div class="empleados-cards">
+        <div class="empleado-card" th:each="empleado : ${empleados}">
+            <h3 th:text="${empleado['nombre']}">Nombre</h3>
+            <p><strong>Cargo:</strong> <span th:text="${empleado['cargo']}">Cargo</span></p>
+            <p><strong>Salario:</strong> <span th:text="${empleado['salario']}">Salario</span></p>
+            <p><strong>Fecha de Ingreso:</strong> <span th:text="${empleado['fechaIngreso']}">Fecha</span></p>
+            <button class="btn-ver"
+                    th:attr="data-id=${empleado['id']},
+                             data-nombre=${empleado['nombre']},
+                             data-cargo=${empleado['cargo']},
+                             data-salario=${empleado['salario']},
+                             data-fecha=${empleado['fechaIngreso']}"
+                    onclick="abrirModalDetalle(this)">Ver detalles</button>
+        </div>
+    </div>
+</main>
+
+<!-- Modal Detalle -->
+<div id="modalDetalle" class="modal" style="display:none;">
+    <div class="card detalle-empleado">
+        <h2 class="titulo" id="detalleNombre">Nombre</h2>
+        <p class="dato"><strong>Cargo:</strong> <span id="detalleCargo">Cargo</span></p>
+        <p class="dato"><strong>Salario:</strong> <span id="detalleSalario">Salario</span></p>
+        <p class="dato"><strong>Fecha de Ingreso:</strong> <span id="detalleFecha">Fecha</span></p>
+        <button class="boton-volver" onclick="cerrarModal('modalDetalle')">← Cerrar</button>
+    </div>
+</div>
+
+<!-- Modal Crear -->
+<div id="modalCrear" class="modal" style="display:none;">
+    <div class="contenedor-formulario">
+        <h2>Crear Nuevo Empleado</h2>
+        <form class="formulario-empleado" th:action="@{/empleados/crear}" method="post">
+            <div class="campo-formulario">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre">
+            </div>
+            <div class="campo-formulario">
+                <label for="cargo">Cargo:</label>
+                <input type="text" id="cargo" name="cargo">
+            </div>
+            <div class="campo-formulario">
+                <label for="salario">Salario:</label>
+                <input type="text" id="salario" name="salario">
+            </div>
+            <div class="campo-formulario">
+                <label for="fechaIngreso">Fecha de Ingreso:</label>
+                <input type="date" id="fechaIngreso" name="fechaIngreso">
+            </div>
+            <div class="botones-formulario">
+                <button class="btn-control" type="submit">Guardar</button>
+                <button type="button" class="boton-volver" onclick="cerrarModal('modalCrear')">← Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+</body>
+</html>

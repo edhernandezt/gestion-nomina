@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuración</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<header th:replace="~{header :: header}"></header>
+
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+<main>
+    <h2>Configuración del Sistema</h2>
+    <p class="message">Aquí podrás personalizar opciones del sistema más adelante.</p>
+</main>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+</body>
+</html>

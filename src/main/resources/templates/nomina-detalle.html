@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Nómina</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<header th:replace="header :: header"></header>
+
+
+<nav th:replace="navbar :: navbar"></nav>
+
+<main>
+    <h2>Detalle de Nómina - <span th:text="${#temporals.format(nomina.fecha, 'MMMM yyyy')}">Enero 2025</span></h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Empleado</th>
+            <th>Cargo</th>
+            <th>Salario Base</th>
+            <th>Bonificaciones</th>
+            <th>Deducciones</th>
+            <th>Total a Pagar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="detalle : ${nomina.detalles}">
+            <td th:text="${detalle.empleado.nombre}">Juan Pérez</td>
+            <td th:text="${detalle.empleado.cargo}">Analista</td>
+            <td th:text="${detalle.salarioBase}">$0.00</td>
+            <td th:text="${detalle.bonificaciones}">$0.00</td>
+            <td th:text="${detalle.deducciones}">$0.00</td>
+            <td th:text="${detalle.totalPagar}">$0.00</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <a th:href="@{/nominas}">← Volver al listado de nóminas</a>
+</main>
+
+<footer th:replace="footer :: footer"></footer>
+
+</body>
+</html>

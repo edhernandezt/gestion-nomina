@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+
+<div th:replace="~{header :: header}"></div>
+
+
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+
+<main>
+    <h2>Bienvenido al Sistema de Nómina</h2>
+    <div class="cards">
+        <div class="card">
+            <h3>Empleados activos</h3>
+            <p><span th:text="${empleadosActivos}">0</span> empleados</p>
+        </div>
+        <div class="card">
+            <h3>Total Nómina</h3>
+            <p>$<span th:text="${totalNomina}">0</span></p>
+        </div>
+    </div>
+</main>
+
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+</body>
+</html>

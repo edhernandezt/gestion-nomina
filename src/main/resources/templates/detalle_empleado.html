@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detalle del Empleado</title>
+    <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+
+<div class="card detalle-empleado">
+    <div class="titulo" th:text="${empleado.nombre}">Nombre</div>
+    <div class="dato"><strong>Cargo:</strong> <span th:text="${empleado.cargo}">Cargo</span></div>
+    <div class="dato"><strong>Salario:</strong> <span th:text="${empleado.salario}">Salario</span></div>
+    <div class="dato"><strong>Fecha de Ingreso:</strong> <span th:text="${empleado.fechaIngreso}">Fecha</span></div>
+
+    <a href="/empleados" class="boton-volver">← Volver</a>
+</div>
+
+
+</body>
+</html>
