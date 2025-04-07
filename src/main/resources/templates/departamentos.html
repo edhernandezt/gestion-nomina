@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestión de Departamentos</title>
+    <meta charset="UTF-8">
+    <style>
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Departamentos</h1>
+
+<!-- Mensaje de error -->
+<div th:if="${mensajeError != null}" class="error-message">
+    <strong th:text="${mensajeError}">Mensaje de error</strong>
+</div>
+
+<!-- Formulario crear -->
+<form th:if="${departamentoDTO.idDepartamento == null}" th:action="@{/departamentos/crear}" method="post" th:object="${departamentoDTO}">
+    <h2>Crear Departamento</h2>
+    <label>Nombre:</label>
+    <input type="text" th:field="*{nombre}" required />
+    <button type="submit">Crear</button>
+</form>
+
+<!-- Formulario editar -->
+<form th:if="${departamentoDTO.idDepartamento != null}" th:action="@{/departamentos/actualizar}" method="post" th:object="${departamentoDTO}">
+    <h2>Editar Departamento</h2>
+    <input type="hidden" th:field="*{idDepartamento}" />
+    <label>Nombre:</label>
+    <input type="text" th:field="*{nombre}" required />
+    <button type="submit">Actualizar</button>
+</form>
+
+<hr/>
+
+<h2>Buscar Departamento por ID</h2>
+<form action="/departamentos/buscar" method="post">
+    <label>ID:</label>
+    <input type="number" name="idDepartamentoBuscar" required />
+    <button type="submit">Buscar</button>
+</form>
+
+<div th:if="${departamentoBuscado != null}">
+    <h3>Resultado</h3>
+    <p><strong>ID:</strong> <span th:text="${departamentoBuscado.idDepartamento}"></span></p>
+    <p><strong>Nombre:</strong> <span th:text="${departamentoBuscado.nombre}"></span></p>
+</div>
+
+<hr/>
+
+<h2>Lista de Departamentos</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="dep : ${departamentos}">
+        <td th:text="${dep.idDepartamento}"></td>
+        <td th:text="${dep.nombre}"></td>
+        <td>
+            <a th:href="@{/departamentos/editar/{id}(id=${dep.idDepartamento})}">Editar</a> |
+            <a th:href="@{/departamentos/eliminar/{id}(id=${dep.idDepartamento})}" onclick="return confirm('¿Eliminar departamento?')">Eliminar</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
