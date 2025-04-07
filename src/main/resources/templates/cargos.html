@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestión de Cargos</title>
+    <meta charset="UTF-8">
+    <style>
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Cargos</h1>
+
+<!-- ✅ Mensaje de error si hay una excepción -->
+<div th:if="${mensajeError != null}" class="error-message">
+    <strong th:text="${mensajeError}">Mensaje de error</strong>
+</div>
+
+<!-- Formulario para CREAR -->
+<form th:if="${cargoDTO.idCargo == null}" th:action="@{/cargos/crear}" method="post" th:object="${cargoDTO}">
+    <h2>Crear Cargo Nuevo</h2>
+    <label>Nombre:</label>
+    <input type="text" th:field="*{nombre}" required />
+    <button type="submit">Crear</button>
+</form>
+
+<!-- Formulario para EDITAR -->
+<form th:if="${cargoDTO.idCargo != null}" th:action="@{/cargos/actualizar}" method="post" th:object="${cargoDTO}">
+    <h2>Editar Cargo</h2>
+    <input type="hidden" th:field="*{idCargo}" />
+    <label>Nombre:</label>
+    <input type="text" th:field="*{nombre}" required />
+    <button type="submit">Actualizar</button>
+</form>
+
+<hr/>
+
+<!-- Buscar por ID -->
+<h2>Buscar Cargo por ID</h2>
+<form action="/cargos/buscar" method="post">
+    <label>ID:</label>
+    <input type="number" name="idCargoBuscar" required />
+    <button type="submit">Buscar</button>
+</form>
+
+<!-- Mostrar resultado de búsqueda -->
+<div th:if="${cargoBuscado != null}">
+    <h3>Resultado de búsqueda</h3>
+    <p><strong>ID:</strong> <span th:text="${cargoBuscado.idCargo}"></span></p>
+    <p><strong>Nombre:</strong> <span th:text="${cargoBuscado.nombre}"></span></p>
+</div>
+
+<hr/>
+
+<!-- Tabla con todos los registros -->
+<h2>Todos los Cargos</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="cargo : ${cargos}">
+        <td th:text="${cargo.idCargo}"></td>
+        <td th:text="${cargo.nombre}"></td>
+        <td>
+            <a th:href="@{/cargos/editar/{id}(id=${cargo.idCargo})}">Editar</a> |
+            <a th:href="@{/cargos/eliminar/{id}(id=${cargo.idCargo})}" onclick="return confirm('¿Eliminar cargo?')">Eliminar</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
