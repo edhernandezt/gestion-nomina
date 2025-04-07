@@ -1,4 +1,4 @@
-package co.edu.unbosque.gestion_nomina.controller.implementations;
+package co.edu.unbosque.gestion_nomina.controller;
 
 import co.edu.unbosque.gestion_nomina.exceptions.CargoException;
 import co.edu.unbosque.gestion_nomina.model.dto.CargoDTO;
