@@ -1,7 +1,9 @@
 package co.edu.unbosque.gestion_nomina.service.implementations;
 
+import co.edu.unbosque.gestion_nomina.exceptions.EmpleadoException;
 import co.edu.unbosque.gestion_nomina.model.dto.EmpleadoDTO;
-import co.edu.unbosque.gestion_nomina.repository.EmpleadoRepository;
+import co.edu.unbosque.gestion_nomina.model.entity.*;
+import co.edu.unbosque.gestion_nomina.repository.*;
 import co.edu.unbosque.gestion_nomina.service.interfaces.ICrud;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,41 +11,70 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-public class EmpleadoService implements ICrud<EmpleadoDTO, String> {
+public class EmpleadoService implements ICrud<EmpleadoDTO, Integer> {
 
-    private final EmpleadoRepository empleadoRepository;
-    private final ModelMapper modelMapper;
+    @Autowired private EmpleadoRepository empleadoRepository;
+    @Autowired private CargoRepository cargoRepository;
+    @Autowired private DepartamentoRepository departamentoRepository;
+    @Autowired private EstadoCivilRepository estadoCivilRepository;
+    @Autowired private ArlRepository arlRepository;
+    @Autowired private EpsRepository epsRepository;
+    @Autowired private FondoPensionRepository fondoPensionRepository;
+    @Autowired private TipoContratoRepository tipoContratoRepository;
+    @Autowired private FactorRiesgoRepository factorRiesgoRepository;
+    @Autowired private EntidadBancariaRepository entidadBancariaRepository;
+    @Autowired private EstadoRepository estadoRepository;
+    @Autowired private ModelMapper modelMapper;
 
-    @Autowired
-    public EmpleadoService(EmpleadoRepository empleadoRepository, ModelMapper modelMapper) {
-        this.empleadoRepository = empleadoRepository;
-        this.modelMapper = modelMapper;
+    @Override
+    public void create(EmpleadoDTO dto) {
+        Empleado empleado = new Empleado();
+        modelMapper.map(dto, empleado);
+
+        empleado.setCargo(cargoRepository.findById(dto.getCargoId()).orElseThrow(() -> new EmpleadoException("Cargo no encontrado")));
+        empleado.setDepartamento(departamentoRepository.findById(dto.getDepartamentoId()).orElseThrow(() -> new EmpleadoException("Departamento no encontrado")));
+        empleado.setEstadoCivil(estadoCivilRepository.findById(dto.getEstadoCivilId()).orElseThrow(() -> new EmpleadoException("Estado civil no encontrado")));
+        empleado.setArl(arlRepository.findById(dto.getArlId()).orElseThrow(() -> new EmpleadoException("ARL no encontrada")));
+        empleado.setEps(epsRepository.findById(dto.getEpsId()).orElseThrow(() -> new EmpleadoException("EPS no encontrada")));
+        empleado.setFondoPension(fondoPensionRepository.findById(dto.getFondoPensionId()).orElseThrow(() -> new EmpleadoException("Fondo de pensión no encontrado")));
+        empleado.setTipoContrato(tipoContratoRepository.findById(dto.getTipoContratoId()).orElseThrow(() -> new EmpleadoException("Tipo de contrato no encontrado")));
+        empleado.setRiesgo(factorRiesgoRepository.findById(dto.getRiesgoId()).orElseThrow(() -> new EmpleadoException("Factor de riesgo no encontrado")));
+        empleado.setBanco(entidadBancariaRepository.findById(dto.getBancoId()).orElseThrow(() -> new EmpleadoException("Banco no encontrado")));
+        empleado.setEstado(estadoRepository.findById(dto.getEstadoId()).orElseThrow(() -> new EmpleadoException("Estado no encontrado")));
+
+        empleadoRepository.save(empleado);
     }
 
     @Override
-    public void create(EmpleadoDTO objetoDTO) {
-
+    public Optional<EmpleadoDTO> find(Integer id) {
+        return empleadoRepository.findById(id)
+                .map(e -> modelMapper.map(e, EmpleadoDTO.class));
     }
 
     @Override
-    public Optional<EmpleadoDTO> find(String id) {
-        return Optional.empty();
+    public void update(Integer id, EmpleadoDTO dto) {
+        Empleado empleado = empleadoRepository.findById(id)
+                .orElseThrow(() -> new EmpleadoException("Empleado no encontrado"));
+        modelMapper.map(dto, empleado);
+        create(dto); // reutiliza asignaciones y validaciones
     }
 
     @Override
-    public void update(String id, EmpleadoDTO objetoDTO) {
-
-    }
-
-    @Override
-    public void delete(String id) {
-
+    public void delete(Integer id) {
+        if (!empleadoRepository.existsById(id)) {
+            throw new EmpleadoException("Empleado no encontrado para eliminar");
+        }
+        empleadoRepository.deleteById(id);
     }
 
     @Override
     public List<EmpleadoDTO> findAll() {
-        return List.of();
+        return empleadoRepository.findAll()
+                .stream()
+                .map(e -> modelMapper.map(e, EmpleadoDTO.class))
+                .collect(Collectors.toList());
     }
 }
