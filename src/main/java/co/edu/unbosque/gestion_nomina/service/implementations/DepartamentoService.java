@@ -62,4 +62,12 @@ public class DepartamentoService implements ICrud<DepartamentoDTO, Integer> {
                 .map(dep -> modelMapper.map(dep, DepartamentoDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<DepartamentoDTO> buscarPorNombreOCargo(String keyword) {
+        return departamentoRepository.findAll().stream()
+                .filter(d -> d.getNombre().toLowerCase().contains(keyword.toLowerCase()))
+                .map(d -> modelMapper.map(d, DepartamentoDTO.class))
+                .collect(Collectors.toList());
+    }
 }

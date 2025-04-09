@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/departamentos")
 public class DepartamentoController {
@@ -60,5 +62,13 @@ public class DepartamentoController {
     public String eliminar(@PathVariable Integer id) {
         departamentoService.delete(id);
         return "redirect:/departamentos";
+    }
+
+    @GetMapping("/buscar")
+    public String buscarPorNombre(@RequestParam("keyword") String keyword, Model model) {
+        List<DepartamentoDTO> resultados = departamentoService.buscarPorNombreOCargo(keyword);
+        model.addAttribute("departamentos", resultados);
+        model.addAttribute("departamentoDTO", new DepartamentoDTO());
+        return "departamentos";
     }
 }

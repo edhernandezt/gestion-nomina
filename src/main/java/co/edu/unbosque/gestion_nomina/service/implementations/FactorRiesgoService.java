@@ -51,4 +51,9 @@ public class FactorRiesgoService implements ICrud<FactorRiesgoDTO, Integer> {
                 .map(factor -> modelMapper.map(factor, FactorRiesgoDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<FactorRiesgoDTO> buscarPorNombreOCargo(String keyword) {
+        return List.of();
+    }
 }

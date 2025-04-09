@@ -12,9 +12,26 @@
 <nav th:replace="~{navbar :: navbar}"></nav>
 
 <main>
-    <h2>Configuración del Sistema</h2>
-    <p class="message">Aquí podrás personalizar opciones del sistema más adelante.</p>
+    <h2 class="titulo-reporte">Configuración del Sistema</h2>
+
+
+    <div class="cards configuracion-cards">
+        <div class="card card-config">
+            <h3>Gestión de Cargos</h3>
+            <p>Administra los cargos disponibles.</p>
+            <a th:href="@{/cargos}" class="btn-control2 ">Cargos</a>
+        </div>
+
+        <div class="card card-config">
+            <h3>Gestión de Departamentos</h3>
+            <p>Administra los departamentos disponibles.</p>
+            <a th:href="@{/departamentos}" class="btn-control2">Departamentos</a>
+        </div>
+    </div>
+
 </main>
+
+
 
 <footer th:replace="~{footer :: footer}"></footer>
 

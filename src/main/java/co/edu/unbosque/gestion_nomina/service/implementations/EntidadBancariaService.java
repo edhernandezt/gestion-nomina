@@ -50,4 +50,9 @@ public class EntidadBancariaService implements ICrud<EntidadBancariaDTO, Integer
                 .map(e -> modelMapper.map(e, EntidadBancariaDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<EntidadBancariaDTO> buscarPorNombreOCargo(String keyword) {
+        return List.of();
+    }
 }

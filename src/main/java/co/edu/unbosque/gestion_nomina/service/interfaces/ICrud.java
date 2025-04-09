@@ -10,4 +10,5 @@ public interface ICrud <T,K> {
     void update(K id, T objetoDTO);
     void delete(K id);
     List<T> findAll();
+    List<T> buscarPorNombreOCargo(String keyword);
 }

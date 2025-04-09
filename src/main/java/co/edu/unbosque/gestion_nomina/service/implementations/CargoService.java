@@ -62,4 +62,13 @@ public class CargoService implements ICrud<CargoDTO, Integer> {
                 .map(cargo -> modelMapper.map(cargo, CargoDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<CargoDTO> buscarPorNombreOCargo(String keyword) {
+        return cargoRepository.findAll().stream()
+                .filter(c -> c.getNombre().toLowerCase().contains(keyword.toLowerCase()))
+                .map(c -> modelMapper.map(c, CargoDTO.class))
+                .collect(Collectors.toList());
+    }
+
 }

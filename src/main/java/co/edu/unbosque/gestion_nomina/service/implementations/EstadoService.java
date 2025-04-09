@@ -49,4 +49,9 @@ public class EstadoService implements ICrud<EstadoDTO, Integer> {
                 .map(e -> modelMapper.map(e, EstadoDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<EstadoDTO> buscarPorNombreOCargo(String keyword) {
+        return List.of();
+    }
 }

@@ -50,4 +50,9 @@ public class TipoContratoService implements ICrud<TipoContratoDTO, Integer> {
                 .map(tipoContrato -> modelMapper.map(tipoContrato, TipoContratoDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<TipoContratoDTO> buscarPorNombreOCargo(String keyword) {
+        return List.of();
+    }
 }

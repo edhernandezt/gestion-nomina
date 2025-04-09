@@ -49,4 +49,9 @@ public class TipoHoraExtraService implements ICrud<TipoHoraExtraDTO, Integer> {
                 .map(e -> modelMapper.map(e, TipoHoraExtraDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<TipoHoraExtraDTO> buscarPorNombreOCargo(String keyword) {
+        return List.of();
+    }
 }

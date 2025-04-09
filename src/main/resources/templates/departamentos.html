@@ -1,81 +1,105 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Gestión de Departamentos</title>
     <meta charset="UTF-8">
-    <style>
-        .error-message {
-            background-color: #f44336;
-            color: white;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+    <title>Gestión de Departamentos</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script>
+        function abrirModalCrear() {
+            document.getElementById("modalCrear").style.display = "block";
         }
-    </style>
+
+        function abrirModalEditar(id) {
+            const card = document.getElementById("departamento-" + id);
+            const modal = document.getElementById("modalEditar");
+
+            if (!card || !modal) return;
+
+            modal.querySelector("input[name='idDepartamento']").value = id;
+            modal.querySelector("input[name='nombre']").value = card.querySelector(".nombre").textContent.trim();
+            modal.style.display = "block";
+        }
+
+        function cerrarModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.style.display = "none";
+        }
+    </script>
 </head>
 <body>
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
 
-<h1>Departamentos</h1>
+<main class="container-empleado">
+    <h4 class="titulo-reporte">Gestión de Departamentos</h4>
 
-<!-- Mensaje de error -->
-<div th:if="${mensajeError != null}" class="error-message">
-    <strong th:text="${mensajeError}">Mensaje de error</strong>
-</div>
+    <div style="margin: 20px 0;">
+        <a th:href="@{/configuracion}" class="boton-volver">← Volver a Configuración</a>
+    </div>
 
-<!-- Formulario crear -->
-<form th:if="${departamentoDTO.idDepartamento == null}" th:action="@{/departamentos/crear}" method="post" th:object="${departamentoDTO}">
-    <h2>Crear Departamento</h2>
-    <label>Nombre:</label>
-    <input type="text" th:field="*{nombre}" required />
-    <button type="submit">Crear</button>
-</form>
 
-<!-- Formulario editar -->
-<form th:if="${departamentoDTO.idDepartamento != null}" th:action="@{/departamentos/actualizar}" method="post" th:object="${departamentoDTO}">
-    <h2>Editar Departamento</h2>
-    <input type="hidden" th:field="*{idDepartamento}" />
-    <label>Nombre:</label>
-    <input type="text" th:field="*{nombre}" required />
-    <button type="submit">Actualizar</button>
-</form>
+    <!-- Barra de búsqueda -->
+    <div class="empleados-barra-controles" style="display: flex; gap: 10px;">
+        <form th:action="@{/departamentos/buscar}" method="get" style="display: flex; gap: 10px;">
+            <input type="text" placeholder="Buscar por nombre de departamento" name="keyword" class="campo-busqueda"/>
+            <button type="submit" class="btn-control">Buscar</button>
+        </form>
+    </div>
 
-<hr/>
+    <!-- Botón crear -->
+    <div style="display: flex; justify-content: flex-end; margin-top: 20px; margin-bottom: 20px;">
+        <button type="button" class="btn-control3" onclick="abrirModalCrear()">+ Crear Departamento</button>
+    </div>
 
-<h2>Buscar Departamento por ID</h2>
-<form action="/departamentos/buscar" method="post">
-    <label>ID:</label>
-    <input type="number" name="idDepartamentoBuscar" required />
-    <button type="submit">Buscar</button>
-</form>
+    <!-- Cards -->
+    <div class="empleados-cards">
+        <div class="empleado-card" th:each="dep : ${departamentos}" th:id="'departamento-' + ${dep.idDepartamento}">
+            <h3 class="nombre" th:text="${dep.nombre}">Nombre del departamento</h3>
+            <p><strong>ID:</strong> <span th:text="${dep.idDepartamento}"></span></p>
 
-<div th:if="${departamentoBuscado != null}">
-    <h3>Resultado</h3>
-    <p><strong>ID:</strong> <span th:text="${departamentoBuscado.idDepartamento}"></span></p>
-    <p><strong>Nombre:</strong> <span th:text="${departamentoBuscado.nombre}"></span></p>
-</div>
+            <div style="display: flex; gap: 10px; margin-top: 20px; ">
+            <button class="btn-ver" th:onclick="'abrirModalEditar(' + ${dep.idDepartamento} + ')'">Editar</button>
+            <a class="btn-ver" th:href="@{/departamentos/eliminar/{id}(id=${dep.idDepartamento})}" onclick="return confirm('¿Eliminar este departamento?')">Eliminar</a>
+            </div>
+        </div>
+    </div>
 
-<hr/>
+    <!-- Modal CREAR -->
+    <div id="modalCrear" class="modal">
+        <div class="contenedor-formulario">
+            <h2>Crear Departamento</h2>
+            <form th:action="@{/departamentos/crear}" method="post" th:object="${departamentoDTO}" class="formulario-empleado">
+                <div class="campo-formulario">
+                    <label>Nombre del Departamento:</label>
+                    <input type="text" th:field="*{nombre}" required />
+                </div>
+                <div class="botones-formulario">
+                    <button class="btn-control" type="submit">Guardar</button>
+                    <button type="button" class="boton-volver" onclick="cerrarModal('modalCrear')">← Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<h2>Lista de Departamentos</h2>
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="dep : ${departamentos}">
-        <td th:text="${dep.idDepartamento}"></td>
-        <td th:text="${dep.nombre}"></td>
-        <td>
-            <a th:href="@{/departamentos/editar/{id}(id=${dep.idDepartamento})}">Editar</a> |
-            <a th:href="@{/departamentos/eliminar/{id}(id=${dep.idDepartamento})}" onclick="return confirm('¿Eliminar departamento?')">Eliminar</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <!-- Modal EDITAR -->
+    <div id="modalEditar" class="modal">
+        <div class="contenedor-formulario">
+            <h2>Editar Departamento</h2>
+            <form th:action="@{/departamentos/actualizar}" method="post" th:object="${departamentoDTO}" class="formulario-empleado">
+                <input type="hidden" th:field="*{idDepartamento}" />
+                <div class="campo-formulario">
+                    <label>Nombre del Departamento:</label>
+                    <input type="text" th:field="*{nombre}" required />
+                </div>
+                <div class="botones-formulario">
+                    <button class="btn-control" type="submit">Actualizar</button>
+                    <button type="button" class="boton-volver" onclick="cerrarModal('modalEditar')">← Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
 
+<footer th:replace="~{footer :: footer}"></footer>
 </body>
 </html>

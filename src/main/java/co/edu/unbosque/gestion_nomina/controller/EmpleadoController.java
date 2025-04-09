@@ -8,6 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/empleado")
 public class EmpleadoController {
@@ -98,4 +102,49 @@ public class EmpleadoController {
         empleadoService.update(dto.getIdEmpleado(), dto);
         return "redirect:/empleado";
     }
+
+    @GetMapping("/buscarNombreCargo")
+    public String buscarPorNombreOCargo(@RequestParam String keyword, Model model) {
+        List<EmpleadoDTO> empleadosFiltrados = empleadoService.buscarPorNombreOCargo(keyword);
+        model.addAttribute("empleadoDTO", new EmpleadoDTO());
+        model.addAttribute("empleadoBuscado", null);
+        model.addAttribute("empleados", empleadosFiltrados);
+        model.addAttribute("cargos", cargoService.findAll());
+        model.addAttribute("departamentos", departamentoService.findAll());
+        model.addAttribute("estadosCiviles", estadoCivilService.findAll());
+        model.addAttribute("arls", arlService.findAll());
+        model.addAttribute("epss", epsService.findAll());
+        model.addAttribute("fondosPension", fondoPensionService.findAll());
+        model.addAttribute("tiposContrato", tipoContratoService.findAll());
+        model.addAttribute("riesgos", riesgoService.findAll());
+        model.addAttribute("bancos", bancoService.findAll());
+        model.addAttribute("estados", estadoService.findAll());
+        return "empleado";
+    }
+
+    @GetMapping("/ordenar-salario")
+    public String ordenarPorSalario(Model model) {
+        List<EmpleadoDTO> empleadosOrdenados = empleadoService.findAll()
+                .stream()
+                .sorted(Comparator.comparing(EmpleadoDTO::getSalarioBasico).reversed())
+                .collect(Collectors.toList());
+
+        model.addAttribute("empleadoDTO", new EmpleadoDTO());
+        model.addAttribute("empleadoBuscado", null);
+        model.addAttribute("empleados", empleadosOrdenados);
+        model.addAttribute("cargos", cargoService.findAll());
+        model.addAttribute("departamentos", departamentoService.findAll());
+        model.addAttribute("estadosCiviles", estadoCivilService.findAll());
+        model.addAttribute("arls", arlService.findAll());
+        model.addAttribute("epss", epsService.findAll());
+        model.addAttribute("fondosPension", fondoPensionService.findAll());
+        model.addAttribute("tiposContrato", tipoContratoService.findAll());
+        model.addAttribute("riesgos", riesgoService.findAll());
+        model.addAttribute("bancos", bancoService.findAll());
+        model.addAttribute("estados", estadoService.findAll());
+
+        return "empleado";
+    }
+
+
 }

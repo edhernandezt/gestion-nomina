@@ -15,6 +15,7 @@
 
 
 <main>
+    <div class="container">
     <h2>Bienvenido al Sistema de Nómina</h2>
     <div class="cards">
         <div class="card">
@@ -23,8 +24,10 @@
         </div>
         <div class="card">
             <h3>Total Nómina</h3>
-            <p>$<span th:text="${totalNomina}">0</span></p>
+            <p>$ <span th:text="${#numbers.formatDecimal(totalNomina, 0, 'COMMA', 2, 'POINT')}">0</span></p>
         </div>
+
+    </div>
     </div>
 </main>
 

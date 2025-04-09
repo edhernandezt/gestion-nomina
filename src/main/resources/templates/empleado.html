@@ -1,336 +1,508 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Gestión de Empleados</title>
     <meta charset="UTF-8">
-    <style>
-        .error-message {
-            background-color: #f44336;
-            color: white;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+    <title>Gestión de Empleados</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script>
+        function abrirModalCrear() {
+            document.getElementById("modalCrear").style.display = "block";
         }
-    </style>
+
+        function abrirModalDetalle(id) {
+            const empleado = document.getElementById("empleado-" + id);
+            const modal = document.getElementById("modalDetalle");
+
+            if (!empleado || !modal) {
+                console.error("No se encontró empleado o modal");
+                return;
+            }
+
+            const obtenerTexto = (clase) => {
+                const elemento = empleado.querySelector(`.${clase}`);
+                return elemento ? elemento.textContent.trim() : '';
+            };
+
+            modal.querySelector(".detalle-nombre").textContent = obtenerTexto("nombre");
+            modal.querySelector(".detalle-correo").textContent = obtenerTexto("correo");
+            modal.querySelector(".detalle-telefono").textContent = obtenerTexto("telefono");
+            modal.querySelector(".detalle-tipo-doc").textContent = obtenerTexto("tipo-doc");
+            modal.querySelector(".detalle-num-doc").textContent = obtenerTexto("num-doc");
+            modal.querySelector(".detalle-fecha-nac").textContent = obtenerTexto("fecha-nac");
+            modal.querySelector(".detalle-direccion").textContent = obtenerTexto("direccion");
+            modal.querySelector(".detalle-fecha-ingreso").textContent = obtenerTexto("fecha-ingreso");
+            modal.querySelector(".detalle-cargo").textContent = obtenerTexto("cargo");
+            modal.querySelector(".detalle-departamento").textContent = obtenerTexto("departamento");
+            modal.querySelector(".detalle-estado-civil").textContent = obtenerTexto("estado-civil");
+            modal.querySelector(".detalle-eps").textContent = obtenerTexto("eps");
+            modal.querySelector(".detalle-arl").textContent = obtenerTexto("arl");
+            modal.querySelector(".detalle-pension").textContent = obtenerTexto("pension");
+            modal.querySelector(".detalle-contrato").textContent = obtenerTexto("contrato");
+            modal.querySelector(".detalle-riesgo").textContent = obtenerTexto("riesgo");
+            modal.querySelector(".detalle-banco").textContent = obtenerTexto("banco");
+            modal.querySelector(".detalle-cuenta").textContent = obtenerTexto("cuenta");
+            modal.querySelector(".detalle-salario").textContent = obtenerTexto("salario");
+            modal.querySelector(".detalle-estado").textContent = obtenerTexto("estado");
+
+            modal.style.display = "block";
+        }
+
+        function abrirModalEditar(id) {
+            const modal = document.getElementById("modalEditar");
+            const empleado = document.getElementById("empleado-" + id);
+
+            if (!empleado || !modal) {
+                console.error("No se encontró empleado o modal");
+                return;
+            }
+
+            const getValue = (className) => {
+                const el = empleado.querySelector("." + className);
+                return el ? el.textContent.trim() : "";
+            };
+
+            modal.querySelector("input[name='idEmpleado']").value = id;
+            modal.querySelector("input[name='tipoDocumento']").value = getValue("tipo-doc");
+            modal.querySelector("input[name='numeroDocumento']").value = getValue("num-doc");
+
+            modal.querySelector("input[name='primerNombre']").value = getValue("primer-nombre");
+            modal.querySelector("input[name='segundoNombre']").value = getValue("segundo-nombre");
+            modal.querySelector("input[name='primerApellido']").value = getValue("primer-apellido");
+            modal.querySelector("input[name='segundoApellido']").value = getValue("segundo-apellido");
+
+
+            modal.querySelector("input[name='fechaNacimiento']").value = getValue("fecha-nac");
+            modal.querySelector("input[name='fechaIngreso']").value = getValue("fecha-ingreso");
+            modal.querySelector("input[name='correoElectronico']").value = getValue("correo");
+            modal.querySelector("input[name='telefono']").value = getValue("telefono");
+            modal.querySelector("input[name='direccion']").value = getValue("direccion");
+            modal.querySelector("input[name='salarioBasico']").value = getValue("salario");
+            modal.querySelector("input[name='cuentaBancaria']").value = getValue("cuenta");
+
+            modal.querySelector("select[name='cargoId']").value = getValue("id-cargo");
+            modal.querySelector("select[name='departamentoId']").value = getValue("id-departamento");
+            modal.querySelector("select[name='estadoCivilId']").value = getValue("id-estado-civil");
+            modal.querySelector("select[name='arlId']").value = getValue("id-arl");
+            modal.querySelector("select[name='epsId']").value = getValue("id-eps");
+            modal.querySelector("select[name='fondoPensionId']").value = getValue("id-fondo");
+            modal.querySelector("select[name='tipoContratoId']").value = getValue("id-contrato");
+            modal.querySelector("select[name='riesgoId']").value = getValue("id-riesgo");
+            modal.querySelector("select[name='bancoId']").value = getValue("id-banco");
+            modal.querySelector("select[name='estadoId']").value = getValue("id-estado");
+
+            modal.style.display = "block";
+        }
+
+        function cerrarModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const formCrear = document.querySelector("#modalCrear form");
+            const fechaNacimientoInput = formCrear.querySelector("input[name='fechaNacimiento']");
+            const fechaIngresoInput = formCrear.querySelector("input[name='fechaIngreso']");
+
+            formCrear.addEventListener("submit", function (e) {
+                const hoy = new Date();
+                const fechaNacimiento = new Date(fechaNacimientoInput.value);
+                const fechaIngreso = new Date(fechaIngresoInput.value);
+
+
+                const edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+                const mesDiff = hoy.getMonth() - fechaNacimiento.getMonth();
+                const diaDiff = hoy.getDate() - fechaNacimiento.getDate();
+
+                const esMayorDeEdad = (edad > 18) || (edad === 18 && (mesDiff > 0 || (mesDiff === 0 && diaDiff >= 0)));
+
+                if (!esMayorDeEdad) {
+                    alert("El empleado debe tener al menos 18 años.");
+                    e.preventDefault();
+                    return;
+                }
+
+
+                if (fechaIngreso > hoy) {
+                    alert("La fecha de ingreso no puede ser posterior a la fecha actual.");
+                    e.preventDefault();
+                    return;
+                }
+            });
+        });
+    </script>
+
+
 </head>
 <body>
 
-<h1>Empleados</h1>
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
 
-<!-- ✅ Mensaje de error si hay una excepción -->
-<div th:if="${mensajeError != null}" class="error-message">
-    <strong th:text="${mensajeError}">Mensaje de error</strong>
-</div>
+<main>
+    <div class="container-empleado">
+    <h4 class="titulo-reporte">Lista de Empleados</h4>
 
-<!-- Formulario para CREAR -->
-<form th:if="${empleadoDTO.idEmpleado == null}" th:action="@{/empleado/crear}" method="post" th:object="${empleadoDTO}">
-    <h2>Crear Empleado Nuevo</h2>
+    <div class="empleados-barra-controles" style="display: flex; gap: 10px;">
+        <!-- Formulario de búsqueda -->
+        <form th:action="@{/empleado/buscarNombreCargo}" method="get" style="display: flex; gap: 10px;">
+            <input type="text" placeholder="Buscar por nombre o cargo" name="keyword" class="campo-busqueda"/>
+            <button type="submit" class="btn-control">Buscar</button>
+        </form>
+    </div>
 
-    <label>Tipo de Documento:</label>
-    <input type="text" th:field="*{tipoDocumento}" required />
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <div class="empleados-barra-controles" style="display: flex; gap: 10px;">
+            <!-- Botón de ordenamiento -->
+            <form th:action="@{/empleado/ordenar-salario}" method="get">
+                <button type="submit" class="btn-control3">Ordenar por salario</button>
+            </form>
 
-    <label>Número de Documento:</label>
-    <input type="text" th:field="*{numeroDocumento}" required />
+            <!-- Botón de creación -->
+            <button type="button" onclick="abrirModalCrear()" class="btn-control3">+ Crear Empleado</button>
+        </div>
+    </div>
 
-    <label>Primer Nombre:</label>
-    <input type="text" th:field="*{primerNombre}" required />
 
-    <label>Segundo Nombre:</label>
-    <input type="text" th:field="*{segundoNombre}" />
 
-    <label>Primer Apellido:</label>
-    <input type="text" th:field="*{primerApellido}" required />
 
-    <label>Segundo Apellido:</label>
-    <input type="text" th:field="*{segundoApellido}" />
+    <!-- Cards -->
+    <div class="empleados-cards">
+    <div class="empleado-card" th:each="e : ${empleados}" th:id="'empleado-' + ${e.idEmpleado}">
+        <h3 class="nombre" th:text="${e.primerNombre + ' ' + e.segundoNombre + ' ' + e.primerApellido + ' ' + e.segundoApellido}">Nombre</h3>
+        <p><strong>Correo:</strong> <span class="correo" th:text="${e.correoElectronico}"></span></p>
+        <p><strong>Salario:</strong> $<span class="salario" th:text="${e.salarioBasico}"></span></p>
 
-    <label>Fecha de Nacimiento:</label>
-    <input type="date" th:field="*{fechaNacimiento}" required />
+        <!-- Datos ocultos simples -->
+        <span class="primer-nombre" th:text="${e.primerNombre}" hidden></span>
+        <span class="segundo-nombre" th:text="${e.segundoNombre}" hidden></span>
+        <span class="primer-apellido" th:text="${e.primerApellido}" hidden></span>
+        <span class="segundo-apellido" th:text="${e.segundoApellido}" hidden></span>
+        <span class="telefono" th:text="${e.telefono}" hidden></span>
+        <span class="tipo-doc" th:text="${e.tipoDocumento}" hidden></span>
+        <span class="num-doc" th:text="${e.numeroDocumento}" hidden></span>
+        <span class="fecha-nac" th:text="${e.fechaNacimiento}" hidden></span>
+        <span class="direccion" th:text="${e.direccion}" hidden></span>
+        <span class="fecha-ingreso" th:text="${e.fechaIngreso}" hidden></span>
+        <span class="cuenta" th:text="${e.cuentaBancaria}" hidden></span>
 
-    <label>Correo Electrónico:</label>
-    <input type="email" th:field="*{correoElectronico}" required />
+        <!-- IDs ocultos -->
+        <span class="id-cargo" th:text="${e.cargoId}" hidden></span>
+        <span class="id-departamento" th:text="${e.departamentoId}" hidden></span>
+        <span class="id-estado-civil" th:text="${e.estadoCivilId}" hidden></span>
+        <span class="id-arl" th:text="${e.arlId}" hidden></span>
+        <span class="id-eps" th:text="${e.epsId}" hidden></span>
+        <span class="id-fondo" th:text="${e.fondoPensionId}" hidden></span>
+        <span class="id-contrato" th:text="${e.tipoContratoId}" hidden></span>
+        <span class="id-riesgo" th:text="${e.riesgoId}" hidden></span>
+        <span class="id-banco" th:text="${e.bancoId}" hidden></span>
+        <span class="id-estado" th:text="${e.estadoId}" hidden></span>
 
-    <label>Teléfono:</label>
-    <input type="text" th:field="*{telefono}" required />
+        <!-- Nombres relacionados (visibles en modales) -->
+        <span class="cargo" hidden th:each="c : ${cargos}" th:if="${c.idCargo == e.cargoId}" th:text="${c.nombre}"></span>
+        <span class="departamento" hidden th:each="d : ${departamentos}" th:if="${d.idDepartamento == e.departamentoId}" th:text="${d.nombre}"></span>
+        <span class="estado-civil" hidden th:each="ec : ${estadosCiviles}" th:if="${ec.idEstadoCivil == e.estadoCivilId}" th:text="${ec.estado}"></span>
+        <span class="arl" hidden th:each="a : ${arls}" th:if="${a.idArl == e.arlId}" th:text="${a.nombreArl}"></span>
+        <span class="eps" hidden th:each="ep : ${epss}" th:if="${ep.idEps == e.epsId}" th:text="${ep.nombreEps}"></span>
+        <span class="pension" hidden th:each="fp : ${fondosPension}" th:if="${fp.idFondoPension == e.fondoPensionId}" th:text="${fp.nombreFondo}"></span>
+        <span class="contrato" hidden th:each="tc : ${tiposContrato}" th:if="${tc.idTipoContrato == e.tipoContratoId}" th:text="${tc.tipoContrato}"></span>
+        <span class="riesgo" hidden th:each="r : ${riesgos}" th:if="${r.idFactor == e.riesgoId}" th:text="${r.nombre}"></span>
+        <span class="banco" hidden th:each="b : ${bancos}" th:if="${b.idBanco == e.bancoId}" th:text="${b.nombreBanco}"></span>
+        <span class="estado" hidden th:each="es : ${estados}" th:if="${es.idEstado == e.estadoId}" th:text="${es.nombreEstado}"></span>
 
-    <label>Dirección:</label>
-    <input type="text" th:field="*{direccion}" required />
+        <!-- Botones -->
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="btn-ver" th:onclick="'abrirModalDetalle(' + ${e.idEmpleado} + ')'">Ver detalles</button>
+        <button class="btn-ver" th:onclick="'abrirModalEditar(' + ${e.idEmpleado} + ')'">Editar</button>
+        </div>
+    </div>
+    </div>
 
-    <label>Fecha Ingreso:</label>
-    <input type="date" th:field="*{fechaIngreso}" required />
 
-    <label>Salario Básico:</label>
-    <input type="number" step="0.01" th:field="*{salarioBasico}" required />
 
-    <label>Cuenta Bancaria:</label>
-    <input type="text" th:field="*{cuentaBancaria}" required />
+    <!-- Modal EDITAR -->
+    <div id="modalEditar" class="modal">
+        <div class="contenedor-formulario">
+            <h2>Editar Empleado</h2>
+            <form class="formulario-empleado" th:action="@{/empleado/actualizar}" method="post" th:object="${empleadoDTO}">
+                <input type="hidden" name="idEmpleado" th:value="${empleadoDTO.idEmpleado}" />
 
-    <label>Cargo:</label>
-    <select th:field="*{cargoId}" required>
-        <option value="" disabled selected>Seleccione un cargo</option>
-        <option th:each="c : ${cargos}" th:value="${c.idCargo}" th:text="${c.nombre}"></option>
-    </select>
+                <!-- CAMPOS SOLO LECTURA -->
+                <div class="campo-formulario"><label>Tipo de Documento:</label>
+                    <input type="text" th:field="*{tipoDocumento}" readonly />
+                </div>
 
-    <label>Departamento:</label>
-    <select th:field="*{departamentoId}" required>
-        <option value="" disabled selected>Seleccione un departamento</option>
-        <option th:each="d : ${departamentos}" th:value="${d.idDepartamento}" th:text="${d.nombre}"></option>
-    </select>
+                <div class="campo-formulario"><label>Número de Documento:</label>
+                    <input type="text" th:field="*{numeroDocumento}" readonly />
+                </div>
 
-    <label>Estado Civil:</label>
-    <select th:field="*{estadoCivilId}" required>
-        <option value="" disabled selected>Seleccione</option>
-        <option th:each="ec : ${estadosCiviles}" th:value="${ec.idEstadoCivil}" th:text="${ec.estado}"></option>
-    </select>
+                <div class="campo-formulario"><label>Primer Nombre:</label>
+                    <input type="text" th:field="*{primerNombre}" readonly />
+                </div>
 
-    <label>ARL:</label>
-    <select th:field="*{arlId}" required>
-        <option value="" disabled selected>Seleccione</option>
-        <option th:each="a : ${arls}" th:value="${a.idArl}" th:text="${a.nombreArl}"></option>
-    </select>
+                <div class="campo-formulario"><label>Segundo Nombre:</label>
+                    <input type="text" th:field="*{segundoNombre}" readonly />
+                </div>
 
-    <label>EPS:</label>
-    <select th:field="*{epsId}" required>
-        <option value="" disabled selected>Seleccione</option>
-        <option th:each="e : ${epss}" th:value="${e.idEps}" th:text="${e.nombreEps}"></option>
-    </select>
+                <div class="campo-formulario"><label>Primer Apellido:</label>
+                    <input type="text" th:field="*{primerApellido}" readonly />
+                </div>
 
-    <label>Fondo de Pensión:</label>
-    <select th:field="*{fondoPensionId}" required>
-        <option value="" disabled selected>Seleccione</option>
-        <option th:each="f : ${fondosPension}" th:value="${f.idFondoPension}" th:text="${f.nombreFondo}"></option>
-    </select>
+                <div class="campo-formulario"><label>Segundo Apellido:</label>
+                    <input type="text" th:field="*{segundoApellido}" readonly />
+                </div>
 
-    <label>Tipo de Contrato:</label>
-    <select th:field="*{tipoContratoId}" required>
-        <option value="" disabled selected>Seleccione</option>
-        <option th:each="tc : ${tiposContrato}" th:value="${tc.idTipoContrato}" th:text="${tc.tipoContrato}"></option>
-    </select>
+                <div class="campo-formulario"><label>Fecha de Nacimiento:</label>
+                    <input type="date" th:field="*{fechaNacimiento}" readonly />
+                </div>
 
-    <label>Riesgo:</label>
-    <select th:field="*{riesgoId}" required>
-        <option value="" disabled selected>Seleccione</option>
-        <option th:each="r : ${riesgos}" th:value="${r.idFactor}" th:text="${r.nombre}"></option>
-    </select>
+                <div class="campo-formulario"><label>Fecha Ingreso:</label>
+                    <input type="date" th:field="*{fechaIngreso}" readonly />
+                </div>
 
-    <label>Banco:</label>
-    <select th:field="*{bancoId}" required>
-        <option value="" disabled selected>Seleccione</option>
-        <option th:each="b : ${bancos}" th:value="${b.idBanco}" th:text="${b.nombreBanco}"></option>
-    </select>
+                <!-- CAMPOS EDITABLES -->
+                <div class="campo-formulario"><label>Correo Electrónico:</label>
+                    <input type="email" th:field="*{correoElectronico}" />
+                </div>
 
-    <label>Estado:</label>
-    <select th:field="*{estadoId}" required>
-        <option value="" disabled selected>Seleccione</option>
-        <option th:each="es : ${estados}" th:value="${es.idEstado}" th:text="${es.nombreEstado}"></option>
-    </select>
+                <div class="campo-formulario"><label>Teléfono:</label>
+                    <input type="text" th:field="*{telefono}" />
+                </div>
 
-    <br/><br/>
-    <button type="submit">Crear</button>
-</form>
+                <div class="campo-formulario"><label>Dirección:</label>
+                    <input type="text" th:field="*{direccion}" />
+                </div>
 
-<!-- Formulario para EDITAR -->
-<form th:if="${empleadoDTO.idEmpleado != null}" th:action="@{/empleado/actualizar}" method="post" th:object="${empleadoDTO}">
-    <h2>Editar Empleado</h2>
+                <div class="campo-formulario"><label>Salario Básico:</label>
+                    <input type="number" step="0.01" th:field="*{salarioBasico}" />
+                </div>
 
-    <input type="hidden" th:field="*{idEmpleado}" />
+                <div class="campo-formulario"><label>Cargo:</label>
+                    <select th:field="*{cargoId}">
+                        <option th:each="c : ${cargos}" th:value="${c.idCargo}" th:text="${c.nombre}"></option>
+                    </select>
+                </div>
 
-    <label>Tipo de Documento:</label>
-    <input type="text" th:field="*{tipoDocumento}" required />
+                <div class="campo-formulario"><label>Departamento:</label>
+                    <select th:field="*{departamentoId}">
+                        <option th:each="d : ${departamentos}" th:value="${d.idDepartamento}" th:text="${d.nombre}"></option>
+                    </select>
+                </div>
 
-    <label>Número de Documento:</label>
-    <input type="text" th:field="*{numeroDocumento}" required />
+                <div class="campo-formulario"><label>Estado Civil:</label>
+                    <select th:field="*{estadoCivilId}">
+                        <option th:each="ec : ${estadosCiviles}" th:value="${ec.idEstadoCivil}" th:text="${ec.estado}"></option>
+                    </select>
+                </div>
 
-    <label>Primer Nombre:</label>
-    <input type="text" th:field="*{primerNombre}" required />
+                <div class="campo-formulario"><label>ARL:</label>
+                    <select th:field="*{arlId}">
+                        <option th:each="a : ${arls}" th:value="${a.idArl}" th:text="${a.nombreArl}"></option>
+                    </select>
+                </div>
 
-    <label>Segundo Nombre:</label>
-    <input type="text" th:field="*{segundoNombre}" />
+                <div class="campo-formulario"><label>EPS:</label>
+                    <select th:field="*{epsId}">
+                        <option th:each="e : ${epss}" th:value="${e.idEps}" th:text="${e.nombreEps}"></option>
+                    </select>
+                </div>
 
-    <label>Primer Apellido:</label>
-    <input type="text" th:field="*{primerApellido}" required />
+                <div class="campo-formulario"><label>Fondo de Pensión:</label>
+                    <select th:field="*{fondoPensionId}">
+                        <option th:each="f : ${fondosPension}" th:value="${f.idFondoPension}" th:text="${f.nombreFondo}"></option>
+                    </select>
+                </div>
 
-    <label>Segundo Apellido:</label>
-    <input type="text" th:field="*{segundoApellido}" />
+                <div class="campo-formulario"><label>Tipo de Contrato:</label>
+                    <select th:field="*{tipoContratoId}">
+                        <option th:each="tc : ${tiposContrato}" th:value="${tc.idTipoContrato}" th:text="${tc.tipoContrato}"></option>
+                    </select>
+                </div>
 
-    <label>Fecha de Nacimiento:</label>
-    <input type="date" th:field="*{fechaNacimiento}" required />
+                <div class="campo-formulario"><label>Riesgo:</label>
+                    <select th:field="*{riesgoId}">
+                        <option th:each="r : ${riesgos}" th:value="${r.idFactor}" th:text="${r.nombre}"></option>
+                    </select>
+                </div>
 
-    <label>Correo Electrónico:</label>
-    <input type="email" th:field="*{correoElectronico}" required />
+                <div class="campo-formulario"><label>Banco:</label>
+                    <select th:field="*{bancoId}">
+                        <option th:each="b : ${bancos}" th:value="${b.idBanco}" th:text="${b.nombreBanco}"></option>
+                    </select>
+                </div>
 
-    <label>Teléfono:</label>
-    <input type="text" th:field="*{telefono}" required />
+                <div class="campo-formulario"><label>Cuenta Bancaria:</label>
+                    <input type="text" th:field="*{cuentaBancaria}" />
+                </div>
 
-    <label>Dirección:</label>
-    <input type="text" th:field="*{direccion}" required />
+                <div class="campo-formulario"><label>Estado:</label>
+                    <select th:field="*{estadoId}">
+                        <option th:each="es : ${estados}" th:value="${es.idEstado}" th:text="${es.nombreEstado}"></option>
+                    </select>
+                </div>
 
-    <label>Fecha Ingreso:</label>
-    <input type="date" th:field="*{fechaIngreso}" required />
+                <!-- Botones -->
+                <div class="botones-formulario">
+                    <button class="btn-control" type="submit">Guardar Cambios</button>
+                    <button type="button" class="boton-volver" onclick="cerrarModal('modalEditar')">← Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <label>Salario Básico:</label>
-    <input type="number" step="0.01" th:field="*{salarioBasico}" required />
 
-    <label>Cuenta Bancaria:</label>
-    <input type="text" th:field="*{cuentaBancaria}" required />
 
-    <label>Cargo:</label>
-    <select th:field="*{cargoId}" required>
-        <option th:each="c : ${cargos}" th:value="${c.idCargo}" th:text="${c.nombre}"></option>
-    </select>
 
-    <label>Departamento:</label>
-    <select th:field="*{departamentoId}" required>
-        <option th:each="d : ${departamentos}" th:value="${d.idDepartamento}" th:text="${d.nombre}"></option>
-    </select>
+    <!-- Modal DETALLE -->
+    <div id="modalDetalle" class="modal">
+        <div class="modal-contenido detalle-empleado">
+            <span class="cerrar" onclick="cerrarModal('modalDetalle')">&times;</span>
+            <div class="titulo detalle-nombre">Nombre Apellido</div>
 
-    <label>Estado Civil:</label>
-    <select th:field="*{estadoCivilId}" required>
-        <option th:each="ec : ${estadosCiviles}" th:value="${ec.idEstadoCivil}" th:text="${ec.estado}"></option>
-    </select>
+            <div class="dato"><strong>Tipo Documento:</strong> <span class="detalle-tipo-doc"></span></div>
+            <div class="dato"><strong>Número Documento:</strong> <span class="detalle-num-doc"></span></div>
+            <div class="dato"><strong>Correo:</strong> <span class="detalle-correo"></span></div>
+            <div class="dato"><strong>Teléfono:</strong> <span class="detalle-telefono"></span></div>
+            <div class="dato"><strong>Fecha de Nacimiento:</strong> <span class="detalle-fecha-nac"></span></div>
+            <div class="dato"><strong>Dirección:</strong> <span class="detalle-direccion"></span></div>
+            <div class="dato"><strong>Estado Civil:</strong> <span class="detalle-estado-civil"></span></div>
+            <div class="dato"><strong>Fecha Ingreso:</strong> <span class="detalle-fecha-ingreso"></span></div>
+            <div class="dato"><strong>Cargo:</strong> <span class="detalle-cargo"></span></div>
+            <div class="dato"><strong>Departamento:</strong> <span class="detalle-departamento"></span></div>
+            <div class="dato"><strong>EPS:</strong> <span class="detalle-eps"></span></div>
+            <div class="dato"><strong>ARL:</strong> <span class="detalle-arl"></span></div>
+            <div class="dato"><strong>Fondo Pensión:</strong> <span class="detalle-pension"></span></div>
+            <div class="dato"><strong>Tipo de Contrato:</strong> <span class="detalle-contrato"></span></div>
+            <div class="dato"><strong>Riesgo:</strong> <span class="detalle-riesgo"></span></div>
+            <div class="dato"><strong>Banco:</strong> <span class="detalle-banco"></span></div>
+            <div class="dato"><strong>Cuenta Bancaria:</strong> <span class="detalle-cuenta"></span></div>
+            <div class="dato"><strong>Salario:</strong> <span class="detalle-salario"></span></div>
+            <div class="dato"><strong>Estado:</strong> <span class="detalle-estado"></span></div>
+        </div>
+    </div>
 
-    <label>ARL:</label>
-    <select th:field="*{arlId}" required>
-        <option th:each="a : ${arls}" th:value="${a.idArl}" th:text="${a.nombreArl}"></option>
-    </select>
 
-    <label>EPS:</label>
-    <select th:field="*{epsId}" required>
-        <option th:each="e : ${epss}" th:value="${e.idEps}" th:text="${e.nombreEps}"></option>
-    </select>
+    <!-- Modal CREAR -->
+    <div id="modalCrear" class="modal">
+        <div class="contenedor-formulario">
+            <h2>Crear Nuevo Empleado</h2>
+            <form class="formulario-empleado" th:action="@{/empleado/crear}" method="post" th:object="${empleadoDTO}">
 
-    <label>Fondo de Pensión:</label>
-    <select th:field="*{fondoPensionId}" required>
-        <option th:each="f : ${fondosPension}" th:value="${f.idFondoPension}" th:text="${f.nombreFondo}"></option>
-    </select>
+                <div class="campo-formulario">
+                    <label>Tipo de Documento:</label>
+                    <div class="select-wrapper">
+                        <select th:field="*{tipoDocumento}" required>
+                            <option value="" disabled selected>Seleccione tipo de documento</option>
+                            <option value="CC">Cédula de Ciudadanía</option>
+                            <option value="CE">Cédula de Extranjería</option>
+                            <option value="PA">Pasaporte</option>
+                            <option value="PPT">Permiso por Protección Temporal</option>
+                        </select>
+                    </div>
+                </div>
 
-    <label>Tipo de Contrato:</label>
-    <select th:field="*{tipoContratoId}" required>
-        <option th:each="tc : ${tiposContrato}" th:value="${tc.idTipoContrato}" th:text="${tc.tipoContrato}"></option>
-    </select>
 
-    <label>Riesgo:</label>
-    <select th:field="*{riesgoId}" required>
-        <option th:each="r : ${riesgos}" th:value="${r.idFactor}" th:text="${r.nombre}"></option>
-    </select>
+                <div class="campo-formulario"><label>Número de Documento:</label><input type="text" th:field="*{numeroDocumento}" required /></div>
+                <div class="campo-formulario"><label>Primer Nombre:</label><input type="text" th:field="*{primerNombre}" required /></div>
+                <div class="campo-formulario"><label>Segundo Nombre:</label><input type="text" th:field="*{segundoNombre}" /></div>
+                <div class="campo-formulario"><label>Primer Apellido:</label><input type="text" th:field="*{primerApellido}" required /></div>
+                <div class="campo-formulario"><label>Segundo Apellido:</label><input type="text" th:field="*{segundoApellido}" /></div>
+                <div class="campo-formulario"><label>Fecha de Nacimiento:</label><input type="date" th:field="*{fechaNacimiento}" required /></div>
+                <div class="campo-formulario"><label>Correo Electrónico:</label><input type="email" th:field="*{correoElectronico}" required /></div>
+                <div class="campo-formulario"><label>Teléfono:</label><input type="text" th:field="*{telefono}" required /></div>
 
-    <label>Banco:</label>
-    <select th:field="*{bancoId}" required>
-        <option th:each="b : ${bancos}" th:value="${b.idBanco}" th:text="${b.nombreBanco}"></option>
-    </select>
+                <div class="campo-formulario"><label>Estado Civil:</label>
+                    <select th:field="*{estadoCivilId}" required>
+                        <option value="" disabled selected>Seleccione</option>
+                        <option th:each="ec : ${estadosCiviles}" th:value="${ec.idEstadoCivil}" th:text="${ec.estado}"></option>
+                    </select>
+                </div>
 
-    <label>Estado:</label>
-    <select th:field="*{estadoId}" required>
-        <option th:each="es : ${estados}" th:value="${es.idEstado}" th:text="${es.nombreEstado}"></option>
-    </select>
+                <div class="campo-formulario"><label>Dirección:</label><input type="text" th:field="*{direccion}" required /></div>
+                <div class="campo-formulario"><label>Fecha Ingreso:</label><input type="date" th:field="*{fechaIngreso}" required /></div>
+                <div class="campo-formulario"><label>Salario Básico:</label><input type="number" step="0.01" th:field="*{salarioBasico}" required /></div>
 
-    <br/><br/>
-    <button type="submit">Actualizar</button>
-</form>
+                <div class="campo-formulario"><label>Cargo:</label>
+                    <select th:field="*{cargoId}" required>
+                        <option value="" disabled selected>Seleccione un cargo</option>
+                        <option th:each="c : ${cargos}" th:value="${c.idCargo}" th:text="${c.nombre}"></option>
+                    </select>
+                </div>
 
-<hr/>
+                <div class="campo-formulario"><label>Departamento:</label>
+                    <select th:field="*{departamentoId}" required>
+                        <option value="" disabled selected>Seleccione un departamento</option>
+                        <option th:each="d : ${departamentos}" th:value="${d.idDepartamento}" th:text="${d.nombre}"></option>
+                    </select>
+                </div>
 
-<!-- Buscar por ID -->
-<h2>Buscar Empleado por ID</h2>
-<form action="/empleado/buscar" method="post">
-    <label>ID:</label>
-    <input type="number" name="idEmpleadoBuscar" required />
-    <button type="submit">Buscar</button>
-</form>
+                <div class="campo-formulario"><label>ARL:</label>
+                    <select th:field="*{arlId}" required>
+                        <option value="" disabled selected>Seleccione</option>
+                        <option th:each="a : ${arls}" th:value="${a.idArl}" th:text="${a.nombreArl}"></option>
+                    </select>
+                </div>
 
-<!-- Mostrar resultado de búsqueda -->
-<div th:if="${empleadoBuscado != null}">
-    <h3>Resultado de búsqueda</h3>
-    <p><strong>ID:</strong> <span th:text="${empleadoBuscado.idEmpleado}"></span></p>
-    <p><strong>Nombre:</strong>
-        <span th:text="${empleadoBuscado.primerNombre + ' ' + empleadoBuscado.segundoNombre + ' ' + empleadoBuscado.primerApellido + ' ' + empleadoBuscado.segundoApellido}"></span>
-    </p>
-    <p><strong>Correo:</strong> <span th:text="${empleadoBuscado.correoElectronico}"></span></p>
-    <p><strong>Salario:</strong> <span th:text="${empleadoBuscado.salarioBasico}"></span></p>
-</div>
+                <div class="campo-formulario"><label>EPS:</label>
+                    <select th:field="*{epsId}" required>
+                        <option value="" disabled selected>Seleccione</option>
+                        <option th:each="e : ${epss}" th:value="${e.idEps}" th:text="${e.nombreEps}"></option>
+                    </select>
+                </div>
 
-<hr/>
+                <div class="campo-formulario"><label>Fondo de Pensión:</label>
+                    <select th:field="*{fondoPensionId}" required>
+                        <option value="" disabled selected>Seleccione</option>
+                        <option th:each="f : ${fondosPension}" th:value="${f.idFondoPension}" th:text="${f.nombreFondo}"></option>
+                    </select>
+                </div>
 
-<!-- Tabla con todos los registros -->
-<h2>Todos los Empleados</h2>
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Tipo Doc</th>
-        <th>Número Doc</th>
-        <th>Nombre Completo</th>
-        <th>Correo</th>
-        <th>Teléfono</th>
-        <th>Fecha Nacimiento</th>
-        <th>Fecha Ingreso</th>
-        <th>Dirección</th>
-        <th>Salario</th>
-        <th>Cargo</th>
-        <th>Departamento</th>
-        <th>Estado Civil</th>
-        <th>ARL</th>
-        <th>EPS</th>
-        <th>Fondo Pensión</th>
-        <th>Tipo Contrato</th>
-        <th>Riesgo</th>
-        <th>Cuenta Bancaria</th>
-        <th>Banco</th>
-        <th>Estado</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="e : ${empleados}">
-        <td th:text="${e.idEmpleado}"></td>
-        <td th:text="${e.tipoDocumento}"></td>
-        <td th:text="${e.numeroDocumento}"></td>
-        <td th:text="${e.primerNombre + ' ' + e.segundoNombre + ' ' + e.primerApellido + ' ' + e.segundoApellido}"></td>
-        <td th:text="${e.correoElectronico}"></td>
-        <td th:text="${e.telefono}"></td>
-        <td th:text="${e.fechaNacimiento}"></td>
-        <td th:text="${e.fechaIngreso}"></td>
-        <td th:text="${e.direccion}"></td>
-        <td th:text="${e.salarioBasico}"></td>
-        <td>
-            <span th:each="c : ${cargos}" th:if="${c.idCargo} == ${e.cargoId}" th:text="${c.nombre}"></span>
-        </td>
-        <td>
-            <span th:each="d : ${departamentos}" th:if="${d.idDepartamento} == ${e.departamentoId}" th:text="${d.nombre}"></span>
-        </td>
-        <td>
-            <span th:each="ec : ${estadosCiviles}" th:if="${ec.idEstadoCivil} == ${e.estadoCivilId}" th:text="${ec.estado}"></span>
-        </td>
-        <td>
-            <span th:each="a : ${arls}" th:if="${a.idArl} == ${e.arlId}" th:text="${a.nombreArl}"></span>
-        </td>
-        <td>
-            <span th:each="eps : ${epss}" th:if="${eps.idEps} == ${e.epsId}" th:text="${eps.nombreEps}"></span>
-        </td>
-        <td>
-            <span th:each="f : ${fondosPension}" th:if="${f.idFondoPension} == ${e.fondoPensionId}" th:text="${f.nombreFondo}"></span>
-        </td>
-        <td>
-            <span th:each="tc : ${tiposContrato}" th:if="${tc.idTipoContrato} == ${e.tipoContratoId}" th:text="${tc.tipoContrato}"></span>
-        </td>
-        <td>
-            <span th:each="r : ${riesgos}" th:if="${r.idFactor} == ${e.riesgoId}" th:text="${r.nombre}"></span>
-        </td>
-        <td th:text="${e.cuentaBancaria}"></td>
-        <td>
-            <span th:each="b : ${bancos}" th:if="${b.idBanco} == ${e.bancoId}" th:text="${b.nombreBanco}"></span>
-        </td>
-        <td>
-            <span th:each="es : ${estados}" th:if="${es.idEstado} == ${e.estadoId}" th:text="${es.nombreEstado}"></span>
-        </td>
-        <td>
-            <a th:href="@{/empleado/editar/{id}(id=${e.idEmpleado})}">Editar</a> |
-            <a th:href="@{/empleado/eliminar/{id}(id=${e.idEmpleado})}" onclick="return confirm('¿Eliminar empleado?')">Eliminar</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+                <div class="campo-formulario"><label>Tipo de Contrato:</label>
+                    <select th:field="*{tipoContratoId}" required>
+                        <option value="" disabled selected>Seleccione</option>
+                        <option th:each="tc : ${tiposContrato}" th:value="${tc.idTipoContrato}" th:text="${tc.tipoContrato}"></option>
+                    </select>
+                </div>
 
+                <div class="campo-formulario"><label>Riesgo:</label>
+                    <select th:field="*{riesgoId}" required>
+                        <option value="" disabled selected>Seleccione</option>
+                        <option th:each="r : ${riesgos}" th:value="${r.idFactor}" th:text="${r.nombre}"></option>
+                    </select>
+                </div>
+
+                <div class="campo-formulario"><label>Banco:</label>
+                    <select th:field="*{bancoId}" required>
+                        <option value="" disabled selected>Seleccione</option>
+                        <option th:each="b : ${bancos}" th:value="${b.idBanco}" th:text="${b.nombreBanco}"></option>
+                    </select>
+                </div>
+
+                <div class="campo-formulario"><label>Cuenta Bancaria:</label><input type="text" th:field="*{cuentaBancaria}" required /></div>
+
+
+                <div class="campo-formulario"><label>Estado:</label>
+                    <select th:field="*{estadoId}" required>
+                        <option value="" disabled selected>Seleccione</option>
+                        <option th:each="es : ${estados}" th:value="${es.idEstado}" th:text="${es.nombreEstado}"></option>
+                    </select>
+                </div>
+
+                <div class="botones-formulario">
+                    <button class="btn-control" type="submit">Guardar</button>
+                    <button type="button" class="boton-volver" onclick="cerrarModal('modalCrear')">← Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    </div>
+</main>
+
+
+
+<footer th:replace="~{footer :: footer}"></footer>
 
 </body>
 </html>

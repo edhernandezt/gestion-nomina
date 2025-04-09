@@ -50,4 +50,9 @@ public class EpsService implements ICrud<EpsDTO, Integer> {
                 .map(eps -> modelMapper.map(eps, EpsDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<EpsDTO> buscarPorNombreOCargo(String keyword) {
+        return List.of();
+    }
 }

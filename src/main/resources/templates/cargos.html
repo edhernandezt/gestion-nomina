@@ -3,82 +3,106 @@
 <head>
     <title>Gestión de Cargos</title>
     <meta charset="UTF-8">
-    <style>
-        .error-message {
-            background-color: #f44336;
-            color: white;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script>
+        function abrirModalCrear() {
+            document.getElementById("modalCrear").style.display = "block";
         }
-    </style>
+
+        function abrirModalEditar(id) {
+            const card = document.getElementById("cargo-" + id);
+            const modal = document.getElementById("modalEditar");
+
+            if (!card || !modal) return;
+
+            modal.querySelector("input[name='idCargo']").value = id;
+            modal.querySelector("input[name='nombre']").value = card.querySelector(".nombre").textContent.trim();
+            modal.style.display = "block";
+        }
+
+        function cerrarModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.style.display = "none";
+        }
+    </script>
 </head>
 <body>
 
-<h1>Cargos</h1>
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
 
-<!-- ✅ Mensaje de error si hay una excepción -->
-<div th:if="${mensajeError != null}" class="error-message">
-    <strong th:text="${mensajeError}">Mensaje de error</strong>
-</div>
+<main class="container-empleado">
+    <h4 class="titulo-reporte">Gestión de Cargos</h4>
 
-<!-- Formulario para CREAR -->
-<form th:if="${cargoDTO.idCargo == null}" th:action="@{/cargos/crear}" method="post" th:object="${cargoDTO}">
-    <h2>Crear Cargo Nuevo</h2>
-    <label>Nombre:</label>
-    <input type="text" th:field="*{nombre}" required />
-    <button type="submit">Crear</button>
-</form>
+    <div style="margin: 20px 0;">
+        <a th:href="@{/configuracion}" class="boton-volver">← Volver a Configuración</a>
+    </div>
 
-<!-- Formulario para EDITAR -->
-<form th:if="${cargoDTO.idCargo != null}" th:action="@{/cargos/actualizar}" method="post" th:object="${cargoDTO}">
-    <h2>Editar Cargo</h2>
-    <input type="hidden" th:field="*{idCargo}" />
-    <label>Nombre:</label>
-    <input type="text" th:field="*{nombre}" required />
-    <button type="submit">Actualizar</button>
-</form>
 
-<hr/>
+    <!-- Barra de búsqueda -->
+    <div class="empleados-barra-controles" style="display: flex; gap: 10px;">
+        <form th:action="@{/cargos/buscar}" method="get" style="display: flex; gap: 10px;">
+            <input type="text" placeholder="Buscar por nombre de cargo" name="keyword" class="campo-busqueda"/>
+            <button type="submit" class="btn-control">Buscar</button>
+        </form>
+    </div>
 
-<!-- Buscar por ID -->
-<h2>Buscar Cargo por ID</h2>
-<form action="/cargos/buscar" method="post">
-    <label>ID:</label>
-    <input type="number" name="idCargoBuscar" required />
-    <button type="submit">Buscar</button>
-</form>
+    <!-- Botón crear -->
+    <div style="display: flex; justify-content: flex-end; margin-top: 20px; margin-bottom: 20px;">
+        <button type="button" class="btn-control3" onclick="abrirModalCrear()">+ Crear Cargo</button>
+    </div>
 
-<!-- Mostrar resultado de búsqueda -->
-<div th:if="${cargoBuscado != null}">
-    <h3>Resultado de búsqueda</h3>
-    <p><strong>ID:</strong> <span th:text="${cargoBuscado.idCargo}"></span></p>
-    <p><strong>Nombre:</strong> <span th:text="${cargoBuscado.nombre}"></span></p>
-</div>
+    <!-- Cards de cargos -->
+    <div class="empleados-cards">
+        <div class="empleado-card" th:each="c : ${cargos}" th:id="'cargo-' + ${c.idCargo}">
+            <h3 class="nombre" th:text="${c.nombre}">Nombre del cargo</h3>
+            <p><strong>ID:</strong> <span th:text="${c.idCargo}">1</span></p>
 
-<hr/>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-ver" th:onclick="'abrirModalEditar(' + ${c.idCargo} + ')'">Editar</button>
+                <a class="btn-ver" th:href="@{/cargos/eliminar/{id}(id=${c.idCargo})}" onclick="return confirm('¿Eliminar este cargo?')">Eliminar</a>
+            </div>
 
-<!-- Tabla con todos los registros -->
-<h2>Todos los Cargos</h2>
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="cargo : ${cargos}">
-        <td th:text="${cargo.idCargo}"></td>
-        <td th:text="${cargo.nombre}"></td>
-        <td>
-            <a th:href="@{/cargos/editar/{id}(id=${cargo.idCargo})}">Editar</a> |
-            <a th:href="@{/cargos/eliminar/{id}(id=${cargo.idCargo})}" onclick="return confirm('¿Eliminar cargo?')">Eliminar</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        </div>
+    </div>
 
+    <!-- Modal CREAR -->
+    <div id="modalCrear" class="modal">
+        <div class="contenedor-formulario">
+            <h2>Crear Cargo</h2>
+            <form th:action="@{/cargos/crear}" method="post" th:object="${cargoDTO}" class="formulario-empleado">
+                <div class="campo-formulario">
+                    <label>Nombre del Cargo:</label>
+                    <input type="text" th:field="*{nombre}" required />
+                </div>
+                <div class="botones-formulario">
+                    <button class="btn-control" type="submit">Guardar</button>
+                    <button type="button" class="boton-volver" onclick="cerrarModal('modalCrear')">← Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal EDITAR -->
+    <div id="modalEditar" class="modal">
+        <div class="contenedor-formulario">
+            <h2>Editar Cargo</h2>
+            <form th:action="@{/cargos/actualizar}" method="post" th:object="${cargoDTO}" class="formulario-empleado">
+                <input type="hidden" th:field="*{idCargo}" />
+                <div class="campo-formulario">
+                    <label>Nombre del Cargo:</label>
+                    <input type="text" th:field="*{nombre}" required />
+                </div>
+                <div class="botones-formulario">
+                    <button class="btn-control" type="submit">Actualizar</button>
+                    <button type="button" class="boton-volver" onclick="cerrarModal('modalEditar')">← Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+<footer th:replace="~{footer :: footer}"></footer>
 </body>
 </html>

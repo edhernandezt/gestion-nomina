@@ -58,9 +58,29 @@ public class EmpleadoService implements ICrud<EmpleadoDTO, Integer> {
     public void update(Integer id, EmpleadoDTO dto) {
         Empleado empleado = empleadoRepository.findById(id)
                 .orElseThrow(() -> new EmpleadoException("Empleado no encontrado"));
-        modelMapper.map(dto, empleado);
-        create(dto); // reutiliza asignaciones y validaciones
+
+        // Campos simples directamente
+        empleado.setCorreoElectronico(dto.getCorreoElectronico());
+        empleado.setCuentaBancaria(dto.getCuentaBancaria());
+        empleado.setDireccion(dto.getDireccion());
+        empleado.setTelefono(dto.getTelefono());
+        empleado.setSalarioBasico(dto.getSalarioBasico());
+
+        // Relaciones buscadas por ID
+        empleado.setCargo(cargoRepository.findById(dto.getCargoId()).orElse(null));
+        empleado.setDepartamento(departamentoRepository.findById(dto.getDepartamentoId()).orElse(null));
+        empleado.setEstadoCivil(estadoCivilRepository.findById(dto.getEstadoCivilId()).orElse(null));
+        empleado.setEps(epsRepository.findById(dto.getEpsId()).orElse(null));
+        empleado.setFondoPension(fondoPensionRepository.findById(dto.getFondoPensionId()).orElse(null));
+        empleado.setTipoContrato(tipoContratoRepository.findById(dto.getTipoContratoId()).orElse(null));
+        empleado.setRiesgo(factorRiesgoRepository.findById(dto.getRiesgoId()).orElse(null));
+        empleado.setBanco(entidadBancariaRepository.findById(dto.getBancoId()).orElse(null));
+        empleado.setEstado(estadoRepository.findById(dto.getEstadoId()).orElse(null));
+
+        // Guardar cambios
+        empleadoRepository.save(empleado);
     }
+
 
     @Override
     public void delete(Integer id) {
@@ -77,4 +97,16 @@ public class EmpleadoService implements ICrud<EmpleadoDTO, Integer> {
                 .map(e -> modelMapper.map(e, EmpleadoDTO.class))
                 .collect(Collectors.toList());
     }
+
+    public List<EmpleadoDTO> buscarPorNombreOCargo(String keyword) {
+        return empleadoRepository.findAll().stream()
+                .filter(e -> {
+                    String nombreCompleto = (e.getPrimerNombre() + " " + e.getSegundoNombre() + " " + e.getPrimerApellido() + " " + e.getSegundoApellido()).toLowerCase();
+                    String nombreCargo = e.getCargo() != null ? e.getCargo().getNombre().toLowerCase() : "";
+                    return nombreCompleto.contains(keyword.toLowerCase()) || nombreCargo.contains(keyword.toLowerCase());
+                })
+                .map(e -> modelMapper.map(e, EmpleadoDTO.class))
+                .collect(Collectors.toList());
+    }
+
 }

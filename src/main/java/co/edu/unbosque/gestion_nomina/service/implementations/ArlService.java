@@ -1,6 +1,7 @@
 package co.edu.unbosque.gestion_nomina.service.implementations;
 
 import co.edu.unbosque.gestion_nomina.model.dto.ArlDTO;
+import co.edu.unbosque.gestion_nomina.model.dto.EntidadBancariaDTO;
 import co.edu.unbosque.gestion_nomina.repository.ArlRepository;
 import co.edu.unbosque.gestion_nomina.service.interfaces.ICrud;
 import org.modelmapper.ModelMapper;
@@ -38,6 +39,7 @@ public class ArlService implements ICrud<ArlDTO, Integer> {
 
     }
 
+
     @Override
     public void delete(Integer id) {
 
@@ -49,5 +51,10 @@ public class ArlService implements ICrud<ArlDTO, Integer> {
                 .stream()
                 .map(arl -> modelMapper.map(arl, ArlDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ArlDTO> buscarPorNombreOCargo(String keyword) {
+        return List.of();
     }
 }

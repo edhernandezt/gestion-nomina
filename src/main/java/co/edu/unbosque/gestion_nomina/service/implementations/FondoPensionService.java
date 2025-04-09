@@ -50,4 +50,9 @@ public class FondoPensionService implements ICrud<FondoPensionDTO, Integer> {
                 .map(fondoPension -> modelMapper.map(fondoPension, FondoPensionDTO.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<FondoPensionDTO> buscarPorNombreOCargo(String keyword) {
+        return List.of();
+    }
 }

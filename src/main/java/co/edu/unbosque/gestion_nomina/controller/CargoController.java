@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/cargos")
 public class CargoController {
@@ -59,5 +61,16 @@ public class CargoController {
         cargoService.update(dto.getIdCargo(), dto);
         return "redirect:/cargos";
     }
+
+    @GetMapping("/buscar")
+    public String buscarCargoPorNombre(@RequestParam("keyword") String keyword, Model model) {
+        List<CargoDTO> resultados = cargoService.buscarPorNombreOCargo(keyword);
+        model.addAttribute("cargos", resultados);
+        model.addAttribute("cargoDTO", new CargoDTO());
+        return "cargos";
+    }
+
+
+
 }
 
