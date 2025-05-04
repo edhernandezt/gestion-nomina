@@ -1,6 +1,7 @@
 package co.edu.unbosque.gestion_nomina.model.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class HorasExtrasDTO {
     private Integer idHoraExtra;
@@ -9,17 +10,20 @@ public class HorasExtrasDTO {
     private BigDecimal cantidadHoras;
     private BigDecimal valorHora;
     private BigDecimal totalPagado;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
 
     public HorasExtrasDTO() {}
 
-    public HorasExtrasDTO(Integer idHoraExtra, Integer tipoHoraExtraId, Integer devengadoId,
-                          BigDecimal cantidadHoras, BigDecimal valorHora, BigDecimal totalPagado) {
+    public HorasExtrasDTO(Integer idHoraExtra, Integer tipoHoraExtraId, Integer devengadoId, BigDecimal cantidadHoras, BigDecimal valorHora, BigDecimal totalPagado, LocalDate fechaInicio, LocalDate fechaFin) {
         this.idHoraExtra = idHoraExtra;
         this.tipoHoraExtraId = tipoHoraExtraId;
         this.devengadoId = devengadoId;
         this.cantidadHoras = cantidadHoras;
         this.valorHora = valorHora;
         this.totalPagado = totalPagado;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
     }
 
     public Integer getIdHoraExtra() {
@@ -68,5 +72,21 @@ public class HorasExtrasDTO {
 
     public void setTotalPagado(BigDecimal totalPagado) {
         this.totalPagado = totalPagado;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
     }
 }

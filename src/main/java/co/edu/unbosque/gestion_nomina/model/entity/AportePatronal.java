@@ -3,10 +3,12 @@ package co.edu.unbosque.gestion_nomina.model.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "aportes_patronales")
 public class AportePatronal {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_aporte")
@@ -16,33 +18,49 @@ public class AportePatronal {
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;
 
+    @ManyToOne
+    @JoinColumn(name = "factor_riesgo_id")
+    private FactorRiesgo factorRiesgo;
+
     @Column(name = "caja_compensacion")
     private BigDecimal cajaCompensacion;
 
-    @Column(name = "salud_patronal")
-    private BigDecimal saludPatronal;
+    @Column(name = "salud")
+    private BigDecimal salud;
 
-    @Column(name = "afp_patronal")
-    private BigDecimal afpPatronal;
+    @Column(name = "pension")
+    private BigDecimal pension;
+
+    @Column(name = "sena")
+    private BigDecimal sena;
+
+    @Column(name = "icbf")
+    private BigDecimal icbf;
 
     @Column(name = "riesgo_laboral")
     private BigDecimal riesgoLaboral;
 
-    @ManyToOne
-    @JoinColumn(name = "factor_riesgo_id")
-    private FactorRiesgo factorRiesgo;
+    @Column(name = "fecha_inicio")
+    private LocalDate fechaInicio;
+
+    @Column(name = "fecha_fin")
+    private LocalDate fechaFin;
 
     public AportePatronal() {
 
     }
 
-    public AportePatronal(Empleado empleado, BigDecimal cajaCompensacion, BigDecimal saludPatronal, BigDecimal afpPatronal, BigDecimal riesgoLaboral, FactorRiesgo factorRiesgo) {
+    public AportePatronal(Empleado empleado, FactorRiesgo factorRiesgo, BigDecimal cajaCompensacion, BigDecimal salud, BigDecimal pension, BigDecimal sena, BigDecimal icbf, BigDecimal riesgoLaboral, LocalDate fechaInicio, LocalDate fechaFin) {
         this.empleado = empleado;
-        this.cajaCompensacion = cajaCompensacion;
-        this.saludPatronal = saludPatronal;
-        this.afpPatronal = afpPatronal;
-        this.riesgoLaboral = riesgoLaboral;
         this.factorRiesgo = factorRiesgo;
+        this.cajaCompensacion = cajaCompensacion;
+        this.salud = salud;
+        this.pension = pension;
+        this.sena = sena;
+        this.icbf = icbf;
+        this.riesgoLaboral = riesgoLaboral;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
     }
 
     public Integer getIdAporte() {
@@ -61,6 +79,14 @@ public class AportePatronal {
         this.empleado = empleado;
     }
 
+    public FactorRiesgo getFactorRiesgo() {
+        return factorRiesgo;
+    }
+
+    public void setFactorRiesgo(FactorRiesgo factorRiesgo) {
+        this.factorRiesgo = factorRiesgo;
+    }
+
     public BigDecimal getCajaCompensacion() {
         return cajaCompensacion;
     }
@@ -69,20 +95,36 @@ public class AportePatronal {
         this.cajaCompensacion = cajaCompensacion;
     }
 
-    public BigDecimal getSaludPatronal() {
-        return saludPatronal;
+    public BigDecimal getSalud() {
+        return salud;
     }
 
-    public void setSaludPatronal(BigDecimal saludPatronal) {
-        this.saludPatronal = saludPatronal;
+    public void setSalud(BigDecimal salud) {
+        this.salud = salud;
     }
 
-    public BigDecimal getAfpPatronal() {
-        return afpPatronal;
+    public BigDecimal getPension() {
+        return pension;
     }
 
-    public void setAfpPatronal(BigDecimal afpPatronal) {
-        this.afpPatronal = afpPatronal;
+    public void setPension(BigDecimal pension) {
+        this.pension = pension;
+    }
+
+    public BigDecimal getSena() {
+        return sena;
+    }
+
+    public void setSena(BigDecimal sena) {
+        this.sena = sena;
+    }
+
+    public BigDecimal getIcbf() {
+        return icbf;
+    }
+
+    public void setIcbf(BigDecimal icbf) {
+        this.icbf = icbf;
     }
 
     public BigDecimal getRiesgoLaboral() {
@@ -93,11 +135,19 @@ public class AportePatronal {
         this.riesgoLaboral = riesgoLaboral;
     }
 
-    public FactorRiesgo getFactorRiesgo() {
-        return factorRiesgo;
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
     }
 
-    public void setFactorRiesgo(FactorRiesgo factorRiesgo) {
-        this.factorRiesgo = factorRiesgo;
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
     }
 }

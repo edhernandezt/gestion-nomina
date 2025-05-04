@@ -3,10 +3,12 @@ package co.edu.unbosque.gestion_nomina.model.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "prestaciones_sociales")
 public class PrestacionSocial {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_prestacion")
@@ -28,16 +30,24 @@ public class PrestacionSocial {
     @Column(name = "vacaciones")
     private BigDecimal vacaciones;
 
+    @Column(name = "fecha_inicio")
+    private LocalDate fechaInicio;
+
+    @Column(name = "fecha_fin")
+    private LocalDate fechaFin;
+
     public PrestacionSocial() {
 
     }
 
-    public PrestacionSocial(Empleado empleado, BigDecimal cesantias, BigDecimal intereses, BigDecimal prima, BigDecimal vacaciones) {
+    public PrestacionSocial(Empleado empleado, BigDecimal cesantias, BigDecimal intereses, BigDecimal prima, BigDecimal vacaciones, LocalDate fechaInicio, LocalDate fechaFin) {
         this.empleado = empleado;
         this.cesantias = cesantias;
         this.intereses = intereses;
         this.prima = prima;
         this.vacaciones = vacaciones;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
     }
 
     public Integer getIdPrestacion() {
@@ -86,6 +96,22 @@ public class PrestacionSocial {
 
     public void setVacaciones(BigDecimal vacaciones) {
         this.vacaciones = vacaciones;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
     }
 }
 

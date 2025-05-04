@@ -1,6 +1,7 @@
 package co.edu.unbosque.gestion_nomina.model.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class PrestacionSocialDTO {
     private Integer idPrestacion;
@@ -9,17 +10,20 @@ public class PrestacionSocialDTO {
     private BigDecimal intereses;
     private BigDecimal prima;
     private BigDecimal vacaciones;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
 
     public PrestacionSocialDTO() {}
 
-    public PrestacionSocialDTO(Integer idPrestacion, Integer empleadoId, BigDecimal cesantias, BigDecimal intereses,
-                               BigDecimal prima, BigDecimal vacaciones) {
+    public PrestacionSocialDTO(Integer idPrestacion, Integer empleadoId, BigDecimal cesantias, BigDecimal intereses, BigDecimal prima, BigDecimal vacaciones, LocalDate fechaInicio, LocalDate fechaFin) {
         this.idPrestacion = idPrestacion;
         this.empleadoId = empleadoId;
         this.cesantias = cesantias;
         this.intereses = intereses;
         this.prima = prima;
         this.vacaciones = vacaciones;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
     }
 
     public Integer getIdPrestacion() {
@@ -68,5 +72,21 @@ public class PrestacionSocialDTO {
 
     public void setVacaciones(BigDecimal vacaciones) {
         this.vacaciones = vacaciones;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
     }
 }

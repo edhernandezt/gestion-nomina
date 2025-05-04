@@ -1,29 +1,44 @@
 package co.edu.unbosque.gestion_nomina.model.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class DevengadoDTO {
+
     private Integer idDevengado;
-    private Integer empleadoId;
-    private BigDecimal sueldo;
-    private BigDecimal auxilioTransporte;
+    private Integer idEmpleado;
+    private String primerNombre;
+    private String segundoNombre;
+    private String primerApellido;
+    private String segundoApellido;
     private BigDecimal horasTrabajadas;
+    private BigDecimal sueldo;
+    private BigDecimal subTotal;
+    private BigDecimal auxilioTransporte;
     private BigDecimal totalDevengado;
-    private BigDecimal aPagar;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
 
-    public DevengadoDTO() {}
-
-    public DevengadoDTO(Integer idDevengado, Integer empleadoId, BigDecimal sueldo, BigDecimal auxilioTransporte,
-                        BigDecimal horasTrabajadas, BigDecimal totalDevengado, BigDecimal aPagar) {
-        this.idDevengado = idDevengado;
-        this.empleadoId = empleadoId;
-        this.sueldo = sueldo;
-        this.auxilioTransporte = auxilioTransporte;
-        this.horasTrabajadas = horasTrabajadas;
-        this.totalDevengado = totalDevengado;
-        this.aPagar = aPagar;
+    public DevengadoDTO() {
     }
 
+    public DevengadoDTO(Integer idDevengado, Integer idEmpleado, String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, BigDecimal horasTrabajadas, BigDecimal sueldo, BigDecimal subTotal, BigDecimal auxilioTransporte, BigDecimal totalDevengado, LocalDate fechaInicio, LocalDate fechaFin) {
+        this.idDevengado = idDevengado;
+        this.idEmpleado = idEmpleado;
+        this.primerNombre = primerNombre;
+        this.segundoNombre = segundoNombre;
+        this.primerApellido = primerApellido;
+        this.segundoApellido = segundoApellido;
+        this.horasTrabajadas = horasTrabajadas;
+        this.sueldo = sueldo;
+        this.subTotal = subTotal;
+        this.auxilioTransporte = auxilioTransporte;
+        this.totalDevengado = totalDevengado;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+    }
+
+    // Getters y Setters
     public Integer getIdDevengado() {
         return idDevengado;
     }
@@ -32,28 +47,44 @@ public class DevengadoDTO {
         this.idDevengado = idDevengado;
     }
 
-    public Integer getEmpleadoId() {
-        return empleadoId;
+    public Integer getIdEmpleado() {
+        return idEmpleado;
     }
 
-    public void setEmpleadoId(Integer empleadoId) {
-        this.empleadoId = empleadoId;
+    public void setIdEmpleado(Integer idEmpleado) {
+        this.idEmpleado = idEmpleado;
     }
 
-    public BigDecimal getSueldo() {
-        return sueldo;
+    public String getPrimerNombre() {
+        return primerNombre;
     }
 
-    public void setSueldo(BigDecimal sueldo) {
-        this.sueldo = sueldo;
+    public void setPrimerNombre(String primerNombre) {
+        this.primerNombre = primerNombre;
     }
 
-    public BigDecimal getAuxilioTransporte() {
-        return auxilioTransporte;
+    public String getSegundoNombre() {
+        return segundoNombre;
     }
 
-    public void setAuxilioTransporte(BigDecimal auxilioTransporte) {
-        this.auxilioTransporte = auxilioTransporte;
+    public void setSegundoNombre(String segundoNombre) {
+        this.segundoNombre = segundoNombre;
+    }
+
+    public String getPrimerApellido() {
+        return primerApellido;
+    }
+
+    public void setPrimerApellido(String primerApellido) {
+        this.primerApellido = primerApellido;
+    }
+
+    public String getSegundoApellido() {
+        return segundoApellido;
+    }
+
+    public void setSegundoApellido(String segundoApellido) {
+        this.segundoApellido = segundoApellido;
     }
 
     public BigDecimal getHorasTrabajadas() {
@@ -64,6 +95,30 @@ public class DevengadoDTO {
         this.horasTrabajadas = horasTrabajadas;
     }
 
+    public BigDecimal getSueldo() {
+        return sueldo;
+    }
+
+    public void setSueldo(BigDecimal sueldo) {
+        this.sueldo = sueldo;
+    }
+
+    public BigDecimal getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(BigDecimal subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public BigDecimal getAuxilioTransporte() {
+        return auxilioTransporte;
+    }
+
+    public void setAuxilioTransporte(BigDecimal auxilioTransporte) {
+        this.auxilioTransporte = auxilioTransporte;
+    }
+
     public BigDecimal getTotalDevengado() {
         return totalDevengado;
     }
@@ -72,11 +127,19 @@ public class DevengadoDTO {
         this.totalDevengado = totalDevengado;
     }
 
-    public BigDecimal getAPagar() {
-        return aPagar;
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
     }
 
-    public void setAPagar(BigDecimal aPagar) {
-        this.aPagar = aPagar;
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
     }
 }

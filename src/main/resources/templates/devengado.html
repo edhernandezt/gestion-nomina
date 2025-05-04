@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Devengados y Horas Extras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- FORMULARIO PARA GENERAR DEVENGADOS -->
+<div class="card">
+    <h2>Generar Devengados (230h)</h2>
+
+    <div th:if="${mensajeDevengado != null}" class="success-message">
+        <p th:text="${mensajeDevengado}"></p>
+    </div>
+    <div th:if="${errorDevengado != null}" class="error-message">
+        <p th:text="${errorDevengado}"></p>
+    </div>
+
+    <form method="post" th:action="@{/devengado/generar}">
+        <div class="form-group">
+            <label>Fecha Inicio:</label>
+            <input type="date" name="fechaInicio" required/>
+        </div>
+        <div class="form-group">
+            <label>Fecha Fin:</label>
+            <input type="date" name="fechaFin" required/>
+        </div>
+        <button type="submit" class="submit-btn">Generar Devengados</button>
+    </form>
+</div>
+
+<!-- FORMULARIO PARA FILTRAR -->
+<div class="card">
+    <h1>Filtrar Devengados</h1>
+    <form method="get" th:action="@{/devengado}">
+        <div class="form-group">
+            <label>Fecha Inicio:</label>
+            <input type="date" name="fechaInicio" th:value="${fechaInicio}" required/>
+        </div>
+        <div class="form-group">
+            <label>Fecha Fin:</label>
+            <input type="date" name="fechaFin" th:value="${fechaFin}" required/>
+        </div>
+        <button type="submit" class="submit-btn">Filtrar</button>
+    </form>
+</div>
+
+<!-- FORMULARIO PARA REGISTRAR HORAS EXTRAS -->
+<div class="card">
+    <h2>Registrar Horas Extras</h2>
+
+    <div th:if="${mensajeHorasExtras != null}" class="success-message">
+        <p th:text="${mensajeHorasExtras}"></p>
+    </div>
+    <div th:if="${errorHorasExtras != null}" class="error-message">
+        <p th:text="${errorHorasExtras}"></p>
+    </div>
+
+    <form th:action="@{/devengado/horas-extras}" method="post">
+        <div class="form-group">
+            <label>Empleado (Devengado):</label>
+            <select name="idDevengado" required>
+                <option value="" disabled selected>Seleccione un devengado</option>
+                <option th:each="d : ${devengados}"
+                        th:value="${d.idDevengado}"
+                        th:text="${d.primerNombre + ' ' + d.primerApellido + ' (' + #temporals.format(d.fechaInicio, 'dd/MM/yyyy') + ' - ' + #temporals.format(d.fechaFin, 'dd/MM/yyyy') + ')'}">
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Tipo de Hora Extra:</label>
+            <select name="idTipoHoraExtra" required>
+                <option value="" disabled selected>Seleccione un tipo</option>
+                <option th:each="tipo : ${tiposHoraExtra}"
+                        th:value="${tipo.idTipoHoraExtra}"
+                        th:text="${tipo.descripcion}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Cantidad de Horas:</label>
+            <input type="number" name="cantidadHoras" step="0.01" min="0" required />
+        </div>
+
+        <div class="form-group">
+            <label>Fecha Inicio:</label>
+            <input type="date" name="fechaInicio" required />
+        </div>
+
+        <div class="form-group">
+            <label>Fecha Fin:</label>
+            <input type="date" name="fechaFin" required />
+        </div>
+
+        <button type="submit" class="submit-btn">Registrar Horas Extras</button>
+    </form>
+</div>
+
+</body>
+</html>

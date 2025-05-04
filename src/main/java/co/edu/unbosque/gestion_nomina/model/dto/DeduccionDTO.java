@@ -1,6 +1,7 @@
 package co.edu.unbosque.gestion_nomina.model.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class DeduccionDTO {
     private Integer idDeduccion;
@@ -14,13 +15,12 @@ public class DeduccionDTO {
     private BigDecimal prestamos;
     private BigDecimal descuentosDias;
     private BigDecimal totalDeducciones;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
 
     public DeduccionDTO() {}
 
-    public DeduccionDTO(Integer idDeduccion, Integer devengadoId, BigDecimal salud, BigDecimal pension,
-                        BigDecimal fondoSolidaridad, BigDecimal reteFuente, BigDecimal saludPrepagada,
-                        BigDecimal aportesVoluntarios, BigDecimal prestamos, BigDecimal descuentosDias,
-                        BigDecimal totalDeducciones) {
+    public DeduccionDTO(Integer idDeduccion, Integer devengadoId, BigDecimal salud, BigDecimal pension, BigDecimal fondoSolidaridad, BigDecimal reteFuente, BigDecimal saludPrepagada, BigDecimal aportesVoluntarios, BigDecimal prestamos, BigDecimal descuentosDias, BigDecimal totalDeducciones, LocalDate fechaInicio, LocalDate fechaFin) {
         this.idDeduccion = idDeduccion;
         this.devengadoId = devengadoId;
         this.salud = salud;
@@ -32,6 +32,8 @@ public class DeduccionDTO {
         this.prestamos = prestamos;
         this.descuentosDias = descuentosDias;
         this.totalDeducciones = totalDeducciones;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
     }
 
     public Integer getIdDeduccion() {
@@ -120,5 +122,21 @@ public class DeduccionDTO {
 
     public void setTotalDeducciones(BigDecimal totalDeducciones) {
         this.totalDeducciones = totalDeducciones;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
     }
 }

@@ -1,28 +1,41 @@
 package co.edu.unbosque.gestion_nomina.model.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class AportePatronalDTO {
+
     private Integer idAporte;
-    private Integer empleadoId;
+    private Integer idEmpleado;
+    private Integer idFactorRiesgo;
     private BigDecimal cajaCompensacion;
-    private BigDecimal saludPatronal;
-    private BigDecimal afpPatronal;
+    private BigDecimal salud;
+    private BigDecimal pension;
+    private BigDecimal sena;
+    private BigDecimal icbf;
     private BigDecimal riesgoLaboral;
-    private Integer factorRiesgoId;
+
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
 
     public AportePatronalDTO() {
     }
 
-    public AportePatronalDTO(Integer idAporte, Integer empleadoId, BigDecimal cajaCompensacion, BigDecimal saludPatronal,
-                             BigDecimal afpPatronal, BigDecimal riesgoLaboral, Integer factorRiesgoId) {
+    public AportePatronalDTO(Integer idAporte, Integer idEmpleado, Integer idFactorRiesgo,
+                             BigDecimal cajaCompensacion, BigDecimal salud, BigDecimal pension,
+                             BigDecimal sena, BigDecimal icbf, BigDecimal riesgoLaboral,
+                             LocalDate fechaInicio, LocalDate fechaFin) {
         this.idAporte = idAporte;
-        this.empleadoId = empleadoId;
+        this.idEmpleado = idEmpleado;
+        this.idFactorRiesgo = idFactorRiesgo;
         this.cajaCompensacion = cajaCompensacion;
-        this.saludPatronal = saludPatronal;
-        this.afpPatronal = afpPatronal;
+        this.salud = salud;
+        this.pension = pension;
+        this.sena = sena;
+        this.icbf = icbf;
         this.riesgoLaboral = riesgoLaboral;
-        this.factorRiesgoId = factorRiesgoId;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
     }
 
     public Integer getIdAporte() {
@@ -33,12 +46,20 @@ public class AportePatronalDTO {
         this.idAporte = idAporte;
     }
 
-    public Integer getEmpleadoId() {
-        return empleadoId;
+    public Integer getIdEmpleado() {
+        return idEmpleado;
     }
 
-    public void setEmpleadoId(Integer empleadoId) {
-        this.empleadoId = empleadoId;
+    public void setIdEmpleado(Integer idEmpleado) {
+        this.idEmpleado = idEmpleado;
+    }
+
+    public Integer getIdFactorRiesgo() {
+        return idFactorRiesgo;
+    }
+
+    public void setIdFactorRiesgo(Integer idFactorRiesgo) {
+        this.idFactorRiesgo = idFactorRiesgo;
     }
 
     public BigDecimal getCajaCompensacion() {
@@ -49,20 +70,36 @@ public class AportePatronalDTO {
         this.cajaCompensacion = cajaCompensacion;
     }
 
-    public BigDecimal getSaludPatronal() {
-        return saludPatronal;
+    public BigDecimal getSalud() {
+        return salud;
     }
 
-    public void setSaludPatronal(BigDecimal saludPatronal) {
-        this.saludPatronal = saludPatronal;
+    public void setSalud(BigDecimal salud) {
+        this.salud = salud;
     }
 
-    public BigDecimal getAfpPatronal() {
-        return afpPatronal;
+    public BigDecimal getPension() {
+        return pension;
     }
 
-    public void setAfpPatronal(BigDecimal afpPatronal) {
-        this.afpPatronal = afpPatronal;
+    public void setPension(BigDecimal pension) {
+        this.pension = pension;
+    }
+
+    public BigDecimal getSena() {
+        return sena;
+    }
+
+    public void setSena(BigDecimal sena) {
+        this.sena = sena;
+    }
+
+    public BigDecimal getIcbf() {
+        return icbf;
+    }
+
+    public void setIcbf(BigDecimal icbf) {
+        this.icbf = icbf;
     }
 
     public BigDecimal getRiesgoLaboral() {
@@ -73,11 +110,19 @@ public class AportePatronalDTO {
         this.riesgoLaboral = riesgoLaboral;
     }
 
-    public Integer getFactorRiesgoId() {
-        return factorRiesgoId;
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
     }
 
-    public void setFactorRiesgoId(Integer factorRiesgoId) {
-        this.factorRiesgoId = factorRiesgoId;
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
     }
 }

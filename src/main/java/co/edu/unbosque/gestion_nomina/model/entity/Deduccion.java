@@ -2,6 +2,7 @@ package co.edu.unbosque.gestion_nomina.model.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "deducciones")
@@ -43,12 +44,16 @@ public class Deduccion {
     @Column(name = "total_deducciones")
     private BigDecimal totalDeducciones;
 
+    @Column(name = "fecha_inicio")
+    private LocalDate fechaInicio;
+
+    @Column(name = "fecha_fin")
+    private LocalDate fechaFin;
+
     public Deduccion() {
     }
 
-    public Deduccion(Devengado devengado, BigDecimal salud, BigDecimal pension, BigDecimal fondoSolidaridad, BigDecimal reteFuente,
-                     BigDecimal saludPrepagada, BigDecimal aportesVoluntarios, BigDecimal prestamos,
-                     BigDecimal descuentosDias, BigDecimal totalDeducciones) {
+    public Deduccion(Devengado devengado, BigDecimal salud, BigDecimal pension, BigDecimal fondoSolidaridad, BigDecimal reteFuente, BigDecimal saludPrepagada, BigDecimal aportesVoluntarios, BigDecimal prestamos, BigDecimal descuentosDias, BigDecimal totalDeducciones, LocalDate fechaInicio, LocalDate fechaFin) {
         this.devengado = devengado;
         this.salud = salud;
         this.pension = pension;
@@ -59,6 +64,8 @@ public class Deduccion {
         this.prestamos = prestamos;
         this.descuentosDias = descuentosDias;
         this.totalDeducciones = totalDeducciones;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
     }
 
     public Integer getIdDeduccion() {
@@ -147,5 +154,21 @@ public class Deduccion {
 
     public void setTotalDeducciones(BigDecimal totalDeducciones) {
         this.totalDeducciones = totalDeducciones;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
     }
 }

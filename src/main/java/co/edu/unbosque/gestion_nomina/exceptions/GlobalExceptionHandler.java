@@ -3,7 +3,6 @@ package co.edu.unbosque.gestion_nomina.exceptions;
 import co.edu.unbosque.gestion_nomina.model.dto.CargoDTO;
 import co.edu.unbosque.gestion_nomina.model.dto.DepartamentoDTO;
 import co.edu.unbosque.gestion_nomina.model.dto.EmpleadoDTO;
-import co.edu.unbosque.gestion_nomina.service.implementations.EmpleadoService;
 import co.edu.unbosque.gestion_nomina.service.interfaces.ICrud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
