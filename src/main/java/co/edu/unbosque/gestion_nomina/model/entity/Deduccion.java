@@ -4,6 +4,19 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@NamedStoredProcedureQuery(
+        name = "sp_generar_deducciones_mensual",
+        procedureName = "sp_generar_deducciones_mensual",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class)
+        }
+)
+@NamedStoredProcedureQuery(
+        name = "sp_listar_deducciones",
+        procedureName = "sp_listar_deducciones",
+        resultClasses = Deduccion.class
+)
 @Entity
 @Table(name = "deducciones")
 public class Deduccion {
@@ -29,15 +42,6 @@ public class Deduccion {
     @Column(name = "rete_fuente")
     private BigDecimal reteFuente;
 
-    @Column(name = "salud_prepagada")
-    private BigDecimal saludPrepagada;
-
-    @Column(name = "aportes_voluntarios")
-    private BigDecimal aportesVoluntarios;
-
-    @Column(name = "prestamos")
-    private BigDecimal prestamos;
-
     @Column(name = "descuentos_dias")
     private BigDecimal descuentosDias;
 
@@ -53,15 +57,12 @@ public class Deduccion {
     public Deduccion() {
     }
 
-    public Deduccion(Devengado devengado, BigDecimal salud, BigDecimal pension, BigDecimal fondoSolidaridad, BigDecimal reteFuente, BigDecimal saludPrepagada, BigDecimal aportesVoluntarios, BigDecimal prestamos, BigDecimal descuentosDias, BigDecimal totalDeducciones, LocalDate fechaInicio, LocalDate fechaFin) {
+    public Deduccion(Devengado devengado, BigDecimal salud, BigDecimal pension, BigDecimal fondoSolidaridad, BigDecimal reteFuente, BigDecimal descuentosDias, BigDecimal totalDeducciones, LocalDate fechaInicio, LocalDate fechaFin) {
         this.devengado = devengado;
         this.salud = salud;
         this.pension = pension;
         this.fondoSolidaridad = fondoSolidaridad;
         this.reteFuente = reteFuente;
-        this.saludPrepagada = saludPrepagada;
-        this.aportesVoluntarios = aportesVoluntarios;
-        this.prestamos = prestamos;
         this.descuentosDias = descuentosDias;
         this.totalDeducciones = totalDeducciones;
         this.fechaInicio = fechaInicio;
@@ -114,30 +115,6 @@ public class Deduccion {
 
     public void setReteFuente(BigDecimal reteFuente) {
         this.reteFuente = reteFuente;
-    }
-
-    public BigDecimal getSaludPrepagada() {
-        return saludPrepagada;
-    }
-
-    public void setSaludPrepagada(BigDecimal saludPrepagada) {
-        this.saludPrepagada = saludPrepagada;
-    }
-
-    public BigDecimal getAportesVoluntarios() {
-        return aportesVoluntarios;
-    }
-
-    public void setAportesVoluntarios(BigDecimal aportesVoluntarios) {
-        this.aportesVoluntarios = aportesVoluntarios;
-    }
-
-    public BigDecimal getPrestamos() {
-        return prestamos;
-    }
-
-    public void setPrestamos(BigDecimal prestamos) {
-        this.prestamos = prestamos;
     }
 
     public BigDecimal getDescuentosDias() {

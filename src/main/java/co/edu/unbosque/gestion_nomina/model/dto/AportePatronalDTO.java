@@ -14,6 +14,7 @@ public class AportePatronalDTO {
     private BigDecimal sena;
     private BigDecimal icbf;
     private BigDecimal riesgoLaboral;
+    private BigDecimal totalAportes;
 
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
@@ -21,10 +22,7 @@ public class AportePatronalDTO {
     public AportePatronalDTO() {
     }
 
-    public AportePatronalDTO(Integer idAporte, Integer idEmpleado, Integer idFactorRiesgo,
-                             BigDecimal cajaCompensacion, BigDecimal salud, BigDecimal pension,
-                             BigDecimal sena, BigDecimal icbf, BigDecimal riesgoLaboral,
-                             LocalDate fechaInicio, LocalDate fechaFin) {
+    public AportePatronalDTO(Integer idAporte, Integer idEmpleado, Integer idFactorRiesgo, BigDecimal cajaCompensacion, BigDecimal salud, BigDecimal pension, BigDecimal sena, BigDecimal icbf, BigDecimal riesgoLaboral, BigDecimal totalAportes, LocalDate fechaInicio, LocalDate fechaFin) {
         this.idAporte = idAporte;
         this.idEmpleado = idEmpleado;
         this.idFactorRiesgo = idFactorRiesgo;
@@ -34,6 +32,7 @@ public class AportePatronalDTO {
         this.sena = sena;
         this.icbf = icbf;
         this.riesgoLaboral = riesgoLaboral;
+        this.totalAportes = totalAportes;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
     }
@@ -108,6 +107,14 @@ public class AportePatronalDTO {
 
     public void setRiesgoLaboral(BigDecimal riesgoLaboral) {
         this.riesgoLaboral = riesgoLaboral;
+    }
+
+    public BigDecimal getTotalAportes() {
+        return totalAportes;
+    }
+
+    public void setTotalAportes(BigDecimal totalAportes) {
+        this.totalAportes = totalAportes;
     }
 
     public LocalDate getFechaInicio() {

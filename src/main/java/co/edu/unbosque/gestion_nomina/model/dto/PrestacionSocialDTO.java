@@ -10,18 +10,20 @@ public class PrestacionSocialDTO {
     private BigDecimal intereses;
     private BigDecimal prima;
     private BigDecimal vacaciones;
+    private BigDecimal totalPrestaciones;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
 
     public PrestacionSocialDTO() {}
 
-    public PrestacionSocialDTO(Integer idPrestacion, Integer empleadoId, BigDecimal cesantias, BigDecimal intereses, BigDecimal prima, BigDecimal vacaciones, LocalDate fechaInicio, LocalDate fechaFin) {
+    public PrestacionSocialDTO(Integer idPrestacion, Integer empleadoId, BigDecimal cesantias, BigDecimal intereses, BigDecimal prima, BigDecimal vacaciones, BigDecimal totalPrestaciones, LocalDate fechaInicio, LocalDate fechaFin) {
         this.idPrestacion = idPrestacion;
         this.empleadoId = empleadoId;
         this.cesantias = cesantias;
         this.intereses = intereses;
         this.prima = prima;
         this.vacaciones = vacaciones;
+        this.totalPrestaciones = totalPrestaciones;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
     }
@@ -72,6 +74,14 @@ public class PrestacionSocialDTO {
 
     public void setVacaciones(BigDecimal vacaciones) {
         this.vacaciones = vacaciones;
+    }
+
+    public BigDecimal getTotalPrestaciones() {
+        return totalPrestaciones;
+    }
+
+    public void setTotalPrestaciones(BigDecimal totalPrestaciones) {
+        this.totalPrestaciones = totalPrestaciones;
     }
 
     public LocalDate getFechaInicio() {

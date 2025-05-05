@@ -5,6 +5,19 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@NamedStoredProcedureQuery(
+        name = "sp_generar_nomina_mensual",
+        procedureName = "sp_generar_nomina_mensual",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class)
+        }
+)
+@NamedStoredProcedureQuery(
+        name = "sp_listar_nominas",
+        procedureName = "sp_listar_nominas",
+        resultClasses = Nomina.class
+)
 @Entity
 @Table(name = "nomina")
 public class Nomina {
@@ -40,14 +53,17 @@ public class Nomina {
     @Column(name = "fecha_fin")
     private LocalDate fechaFin;
 
-    @Column(name = "total_a_pagar")
-    private BigDecimal totalAPagar;
+    @Column(name = "total_a_pagar_empleado")
+    private BigDecimal totalAPagarEmpleado;
+
+    @Column(name = "total_nomina")
+    private BigDecimal totalNomina;
 
     public Nomina(){
 
     }
 
-    public Nomina(Empleado empleado, Devengado devengado, Deduccion deduccion, PrestacionSocial prestacionSocial, AportePatronal aportePatronal, LocalDate fechaInicio, LocalDate fechaFin, BigDecimal totalAPagar) {
+    public Nomina(Empleado empleado, Devengado devengado, Deduccion deduccion, PrestacionSocial prestacionSocial, AportePatronal aportePatronal, LocalDate fechaInicio, LocalDate fechaFin, BigDecimal totalAPagarEmpleado, BigDecimal totalNomina) {
         this.empleado = empleado;
         this.devengado = devengado;
         this.deduccion = deduccion;
@@ -55,7 +71,8 @@ public class Nomina {
         this.aportePatronal = aportePatronal;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.totalAPagar = totalAPagar;
+        this.totalAPagarEmpleado = totalAPagarEmpleado;
+        this.totalNomina = totalNomina;
     }
 
     public Integer getIdNomina() {
@@ -122,11 +139,19 @@ public class Nomina {
         this.fechaFin = fechaFin;
     }
 
-    public BigDecimal getTotalAPagar() {
-        return totalAPagar;
+    public BigDecimal getTotalAPagarEmpleado() {
+        return totalAPagarEmpleado;
     }
 
-    public void setTotalAPagar(BigDecimal totalAPagar) {
-        this.totalAPagar = totalAPagar;
+    public void setTotalAPagarEmpleado(BigDecimal totalAPagarEmpleado) {
+        this.totalAPagarEmpleado = totalAPagarEmpleado;
+    }
+
+    public BigDecimal getTotalNomina() {
+        return totalNomina;
+    }
+
+    public void setTotalNomina(BigDecimal totalNomina) {
+        this.totalNomina = totalNomina;
     }
 }

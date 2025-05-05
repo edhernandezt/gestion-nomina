@@ -10,9 +10,6 @@ public class DeduccionDTO {
     private BigDecimal pension;
     private BigDecimal fondoSolidaridad;
     private BigDecimal reteFuente;
-    private BigDecimal saludPrepagada;
-    private BigDecimal aportesVoluntarios;
-    private BigDecimal prestamos;
     private BigDecimal descuentosDias;
     private BigDecimal totalDeducciones;
     private LocalDate fechaInicio;
@@ -20,16 +17,13 @@ public class DeduccionDTO {
 
     public DeduccionDTO() {}
 
-    public DeduccionDTO(Integer idDeduccion, Integer devengadoId, BigDecimal salud, BigDecimal pension, BigDecimal fondoSolidaridad, BigDecimal reteFuente, BigDecimal saludPrepagada, BigDecimal aportesVoluntarios, BigDecimal prestamos, BigDecimal descuentosDias, BigDecimal totalDeducciones, LocalDate fechaInicio, LocalDate fechaFin) {
+    public DeduccionDTO(Integer idDeduccion, Integer devengadoId, BigDecimal salud, BigDecimal pension, BigDecimal fondoSolidaridad, BigDecimal reteFuente, BigDecimal descuentosDias, BigDecimal totalDeducciones, LocalDate fechaInicio, LocalDate fechaFin) {
         this.idDeduccion = idDeduccion;
         this.devengadoId = devengadoId;
         this.salud = salud;
         this.pension = pension;
         this.fondoSolidaridad = fondoSolidaridad;
         this.reteFuente = reteFuente;
-        this.saludPrepagada = saludPrepagada;
-        this.aportesVoluntarios = aportesVoluntarios;
-        this.prestamos = prestamos;
         this.descuentosDias = descuentosDias;
         this.totalDeducciones = totalDeducciones;
         this.fechaInicio = fechaInicio;
@@ -82,30 +76,6 @@ public class DeduccionDTO {
 
     public void setReteFuente(BigDecimal reteFuente) {
         this.reteFuente = reteFuente;
-    }
-
-    public BigDecimal getSaludPrepagada() {
-        return saludPrepagada;
-    }
-
-    public void setSaludPrepagada(BigDecimal saludPrepagada) {
-        this.saludPrepagada = saludPrepagada;
-    }
-
-    public BigDecimal getAportesVoluntarios() {
-        return aportesVoluntarios;
-    }
-
-    public void setAportesVoluntarios(BigDecimal aportesVoluntarios) {
-        this.aportesVoluntarios = aportesVoluntarios;
-    }
-
-    public BigDecimal getPrestamos() {
-        return prestamos;
-    }
-
-    public void setPrestamos(BigDecimal prestamos) {
-        this.prestamos = prestamos;
     }
 
     public BigDecimal getDescuentosDias() {

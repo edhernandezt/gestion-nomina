@@ -6,7 +6,12 @@ public class NovedadDTO {
 
     private Integer idNovedad;
     private Integer idEmpleado;
+    private String primerNombre;
+    private String segundoNombre;
+    private String primerApellido;
+    private String segundoApellido;
     private Integer idTipoNovedad;
+    private String descripcion;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     private String observaciones;
@@ -15,12 +20,15 @@ public class NovedadDTO {
     public NovedadDTO() {
     }
 
-    public NovedadDTO(Integer idNovedad, Integer idEmpleado, Integer idTipoNovedad,
-                      LocalDate fechaInicio, LocalDate fechaFin,
-                      String observaciones, Integer diasAfectados) {
+    public NovedadDTO(Integer idNovedad, Integer idEmpleado, String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, Integer idTipoNovedad, String descripcion, LocalDate fechaInicio, LocalDate fechaFin, String observaciones, Integer diasAfectados) {
         this.idNovedad = idNovedad;
         this.idEmpleado = idEmpleado;
+        this.primerNombre = primerNombre;
+        this.segundoNombre = segundoNombre;
+        this.primerApellido = primerApellido;
+        this.segundoApellido = segundoApellido;
         this.idTipoNovedad = idTipoNovedad;
+        this.descripcion = descripcion;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.observaciones = observaciones;
@@ -43,12 +51,52 @@ public class NovedadDTO {
         this.idEmpleado = idEmpleado;
     }
 
+    public String getPrimerNombre() {
+        return primerNombre;
+    }
+
+    public void setPrimerNombre(String primerNombre) {
+        this.primerNombre = primerNombre;
+    }
+
+    public String getSegundoNombre() {
+        return segundoNombre;
+    }
+
+    public void setSegundoNombre(String segundoNombre) {
+        this.segundoNombre = segundoNombre;
+    }
+
+    public String getPrimerApellido() {
+        return primerApellido;
+    }
+
+    public void setPrimerApellido(String primerApellido) {
+        this.primerApellido = primerApellido;
+    }
+
+    public String getSegundoApellido() {
+        return segundoApellido;
+    }
+
+    public void setSegundoApellido(String segundoApellido) {
+        this.segundoApellido = segundoApellido;
+    }
+
     public Integer getIdTipoNovedad() {
         return idTipoNovedad;
     }
 
     public void setIdTipoNovedad(Integer idTipoNovedad) {
         this.idTipoNovedad = idTipoNovedad;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public LocalDate getFechaInicio() {

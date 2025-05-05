@@ -5,6 +5,19 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@NamedStoredProcedureQuery(
+        name = "sp_generar_aportes_patronales_mensual",
+        procedureName = "sp_generar_aportes_patronales_mensual",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class)
+        }
+)
+@NamedStoredProcedureQuery(
+        name = "sp_listar_aportes_patronales",
+        procedureName = "sp_listar_aportes_patronales",
+        resultClasses = AportePatronal.class
+)
 @Entity
 @Table(name = "aportes_patronales")
 public class AportePatronal {
@@ -40,6 +53,9 @@ public class AportePatronal {
     @Column(name = "riesgo_laboral")
     private BigDecimal riesgoLaboral;
 
+    @Column(name = "total_aportes")
+    private BigDecimal totalAportes;
+
     @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
 
@@ -50,7 +66,7 @@ public class AportePatronal {
 
     }
 
-    public AportePatronal(Empleado empleado, FactorRiesgo factorRiesgo, BigDecimal cajaCompensacion, BigDecimal salud, BigDecimal pension, BigDecimal sena, BigDecimal icbf, BigDecimal riesgoLaboral, LocalDate fechaInicio, LocalDate fechaFin) {
+    public AportePatronal(Empleado empleado, FactorRiesgo factorRiesgo, BigDecimal cajaCompensacion, BigDecimal salud, BigDecimal pension, BigDecimal sena, BigDecimal icbf, BigDecimal riesgoLaboral, BigDecimal totalAportes, LocalDate fechaInicio, LocalDate fechaFin) {
         this.empleado = empleado;
         this.factorRiesgo = factorRiesgo;
         this.cajaCompensacion = cajaCompensacion;
@@ -59,6 +75,7 @@ public class AportePatronal {
         this.sena = sena;
         this.icbf = icbf;
         this.riesgoLaboral = riesgoLaboral;
+        this.totalAportes = totalAportes;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
     }
@@ -133,6 +150,14 @@ public class AportePatronal {
 
     public void setRiesgoLaboral(BigDecimal riesgoLaboral) {
         this.riesgoLaboral = riesgoLaboral;
+    }
+
+    public BigDecimal getTotalAportes() {
+        return totalAportes;
+    }
+
+    public void setTotalAportes(BigDecimal totalAportes) {
+        this.totalAportes = totalAportes;
     }
 
     public LocalDate getFechaInicio() {

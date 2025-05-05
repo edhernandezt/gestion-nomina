@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestión de Novedades</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #999;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>Registrar Novedad</h1>
+
+    <!-- Mensajes -->
+    <div th:if="${mensajeNovedad != null}" class="success-message" th:text="${mensajeNovedad}"></div>
+    <div th:if="${errorNovedad != null}" class="error-message" th:text="${errorNovedad}"></div>
+
+    <form th:action="@{/novedad/registrar}" method="post">
+        <div class="form-group">
+            <label>Empleado:</label>
+            <select name="idEmpleado" required>
+                <option value="" disabled selected>Seleccione un empleado</option>
+                <option th:each="e : ${empleados}"
+                        th:value="${e.idEmpleado}"
+                        th:text="${e.primerNombre + ' ' + e.primerApellido}">
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Tipo de Novedad:</label>
+            <select name="idTipoNovedad" required>
+                <option value="" disabled selected>Seleccione un tipo</option>
+                <option th:each="t : ${tiposNovedad}"
+                        th:value="${t.idTipoNovedad}"
+                        th:text="${t.descripcion}">
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Fecha Inicio:</label>
+            <input type="date" name="fechaInicio" required>
+        </div>
+
+        <div class="form-group">
+            <label>Fecha Fin:</label>
+            <input type="date" name="fechaFin" required>
+        </div>
+
+        <div class="form-group">
+            <label>Observaciones:</label>
+            <textarea name="observaciones" rows="3" placeholder="Observaciones (opcional)"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Registrar Novedad</button>
+    </form>
+</div>
+
+<!-- Tabla de novedades -->
+<div class="card">
+    <h2>Listado de Novedades</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Empleado</th>
+            <th>Tipo</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Días</th>
+            <th>Observaciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="n : ${novedades}">
+            <td th:text="${n.primerNombre + ' ' + n.primerApellido}">Empleado</td>
+            <td th:text="${n.descripcion}">Tipo</td>
+            <td th:text="${#temporals.format(n.fechaInicio, 'dd/MM/yyyy')}">Inicio</td>
+            <td th:text="${#temporals.format(n.fechaFin, 'dd/MM/yyyy')}">Fin</td>
+            <td th:text="${n.diasAfectados}">Días</td>
+            <td th:text="${n.observaciones}">Observaciones</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

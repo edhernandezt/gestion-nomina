@@ -5,6 +5,19 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@NamedStoredProcedureQuery(
+        name = "sp_generar_prestaciones_sociales_mensual",
+        procedureName = "sp_generar_prestaciones_sociales_mensual",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class)
+        }
+)
+@NamedStoredProcedureQuery(
+        name = "sp_listar_prestaciones",
+        procedureName = "sp_listar_prestaciones",
+        resultClasses = PrestacionSocial.class
+)
 @Entity
 @Table(name = "prestaciones_sociales")
 public class PrestacionSocial {
@@ -30,6 +43,9 @@ public class PrestacionSocial {
     @Column(name = "vacaciones")
     private BigDecimal vacaciones;
 
+    @Column(name = "total_prestaciones")
+    private BigDecimal totalPrestaciones;
+
     @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
 
@@ -40,12 +56,13 @@ public class PrestacionSocial {
 
     }
 
-    public PrestacionSocial(Empleado empleado, BigDecimal cesantias, BigDecimal intereses, BigDecimal prima, BigDecimal vacaciones, LocalDate fechaInicio, LocalDate fechaFin) {
+    public PrestacionSocial(Empleado empleado, BigDecimal cesantias, BigDecimal intereses, BigDecimal prima, BigDecimal vacaciones, BigDecimal totalPrestaciones, LocalDate fechaInicio, LocalDate fechaFin) {
         this.empleado = empleado;
         this.cesantias = cesantias;
         this.intereses = intereses;
         this.prima = prima;
         this.vacaciones = vacaciones;
+        this.totalPrestaciones = totalPrestaciones;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
     }
@@ -96,6 +113,14 @@ public class PrestacionSocial {
 
     public void setVacaciones(BigDecimal vacaciones) {
         this.vacaciones = vacaciones;
+    }
+
+    public BigDecimal getTotalPrestaciones() {
+        return totalPrestaciones;
+    }
+
+    public void setTotalPrestaciones(BigDecimal totalPrestaciones) {
+        this.totalPrestaciones = totalPrestaciones;
     }
 
     public LocalDate getFechaInicio() {
