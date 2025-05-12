@@ -8,5 +8,5 @@ import java.util.List;
 public interface INovedadService {
 
     void registrarNovedad(Integer idEmpleado, Integer idTipoNovedad, LocalDate fechaInicio, LocalDate fechaFin, String observaciones);
-    List<NovedadDTO> listarNovedades();
+    List<NovedadDTO> findByFechasAndNombre(LocalDate fechaInicio, LocalDate fechaFin, String nombre);
 }

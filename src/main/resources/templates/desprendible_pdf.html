@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            padding: 20px;
+        }
+
+        h2, h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+        }
+
+        .info td {
+            padding: 4px 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #333;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .total {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .footer {
+            text-align: center;
+            font-style: italic;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Sistema de Gestión de Nómina</h2>
+<h3>Desprendible de Pago</h3>
+
+<table class="info">
+    <tr>
+        <td><strong>Empleado:</strong></td>
+        <td th:text="${desprendible.nombreEmpleado}">Nombre Apellido</td>
+        <td><strong>Documento:</strong></td>
+        <td th:text="${desprendible.documento}">12345678</td>
+    </tr>
+    <tr>
+        <td><strong>Salario Básico:</strong></td>
+        <td th:text="${#numbers.formatDecimal(desprendible.salarioBasico, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+        <td><strong>Periodo:</strong></td>
+        <td th:text="${#temporals.format(desprendible.fechaInicio, 'dd/MM/yyyy')} + ' al ' + ${#temporals.format(desprendible.fechaFin, 'dd/MM/yyyy')}">01/01/2025 al 31/01/2025</td>
+    </tr>
+</table>
+
+<table>
+    <thead>
+    <tr>
+        <th colspan="2">INGRESOS</th>
+    </tr>
+    <tr>
+        <th>Concepto</th>
+        <th>Valor</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="i : ${desprendible.ingresos}">
+        <td th:text="${i.concepto}">Concepto</td>
+        <td th:text="${#numbers.formatDecimal(i.valor, 1, 'COMMA', 2, 'POINT')}">$0.00</td>
+    </tr>
+    <tr>
+        <td class="total">Total Ingresos</td>
+        <td th:text="${#numbers.formatDecimal(desprendible.totalIngresos, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+    </tr>
+    </tbody>
+</table>
+
+<table>
+    <thead>
+    <tr>
+        <th colspan="2">DEDUCCIONES</th>
+    </tr>
+    <tr>
+        <th>Concepto</th>
+        <th>Valor</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="d : ${desprendible.deducciones}">
+        <td th:text="${d.concepto}">Concepto</td>
+        <td th:text="${#numbers.formatDecimal(d.valor, 1, 'COMMA', 2, 'POINT')}">$0.00</td>
+    </tr>
+    <tr>
+        <td class="total">Total Deducciones</td>
+        <td th:text="${#numbers.formatDecimal(desprendible.totalDeducciones, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+    </tr>
+    </tbody>
+</table>
+
+<table>
+    <tr>
+        <td class="total">Neto a Pagar</td>
+        <td class="total" th:text="${#numbers.formatDecimal(desprendible.netoPagar, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+    </tr>
+</table>
+
+<div class="footer">
+    Este documento no tiene validez tributaria, es un soporte informativo del pago de nómina.
+</div>
+
+</body>
+</html>

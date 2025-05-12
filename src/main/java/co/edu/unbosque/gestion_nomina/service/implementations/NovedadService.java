@@ -1,16 +1,15 @@
 package co.edu.unbosque.gestion_nomina.service.implementations;
 
 import co.edu.unbosque.gestion_nomina.model.dto.NovedadDTO;
-import co.edu.unbosque.gestion_nomina.model.entity.Novedad;
 import co.edu.unbosque.gestion_nomina.repository.NovedadRepository;
 import co.edu.unbosque.gestion_nomina.service.interfaces.INovedadService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class NovedadService implements INovedadService {
@@ -30,10 +29,12 @@ public class NovedadService implements INovedadService {
     }
 
     @Override
-    public List<NovedadDTO> listarNovedades() {
-        List<Novedad> novedades = novedadRepository.findAll();
-        return novedades.stream()
-                .map(novedad -> modelMapper.map(novedad, NovedadDTO.class))
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public List<NovedadDTO> findByFechasAndNombre(LocalDate fechaInicio, LocalDate fechaFin, String nombre) {
+        return novedadRepository.buscarPorNombreYFechas(fechaInicio, fechaFin, nombre)
+                .stream()
+                .map(n -> modelMapper.map(n, NovedadDTO.class))
+                .toList();
     }
+
 }

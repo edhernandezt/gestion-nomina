@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class NominaService implements INominaService {
@@ -32,17 +31,10 @@ public class NominaService implements INominaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<NominaDTO> findAll() {
-        return nominaRepository.listarNominas().stream()
+    public List<NominaDTO> findByFechasAndNombre(LocalDate fechaInicio, LocalDate fechaFin, String nombre) {
+        return nominaRepository.buscarPorNombreYFechas(fechaInicio, fechaFin, nombre)
+                .stream()
                 .map(nomina -> modelMapper.map(nomina, NominaDTO.class))
                 .toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<NominaDTO> findByFechas(LocalDate fechaInicio, LocalDate fechaFin) {
-        return nominaRepository.findByFechaInicioGreaterThanEqualAndFechaFinLessThanEqual(fechaInicio, fechaFin).stream()
-                .map(nomina -> modelMapper.map(nomina, NominaDTO.class))
-                .collect(Collectors.toList());
     }
 }

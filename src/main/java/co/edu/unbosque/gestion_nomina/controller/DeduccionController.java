@@ -26,34 +26,27 @@ public class DeduccionController {
     public String mostrarVistaDeducciones(
             @RequestParam(name = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(name = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+            @RequestParam(name = "keyword", required = false) String keyword,
             Model model) {
 
-        List<DeduccionDTO> deducciones;
-        if (fechaInicio != null && fechaFin != null) {
-            // Puedes implementar un método en el servicio si deseas filtrar por fechas
-            deducciones = deduccionService.findByFechas(fechaInicio, fechaFin);
-        } else {
-            deducciones = deduccionService.findAll();
+        // Si no se pasan fechas, usar mes actual
+        if (fechaInicio == null || fechaFin == null) {
+            LocalDate now = LocalDate.now();
+            fechaInicio = now.withDayOfMonth(1);
+            fechaFin = now.withDayOfMonth(now.lengthOfMonth());
         }
+
+        if (keyword == null) {
+            keyword = "";
+        }
+        List<DeduccionDTO> deducciones = deduccionService.findByFechasAndNombre(fechaInicio, fechaFin, keyword);
 
         model.addAttribute("deducciones", deducciones);
         model.addAttribute("fechaInicio", fechaInicio);
         model.addAttribute("fechaFin", fechaFin);
+        model.addAttribute("keyword", keyword);
+
         return "deduccion";
     }
 
-    @PostMapping("/generar")
-    public String generarDeducciones(
-            @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-            @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
-            Model model) {
-        try {
-            deduccionService.generarDeduccionesMensual(fechaInicio, fechaFin);
-            model.addAttribute("mensajeDeduccion", "Deducciones generadas exitosamente.");
-        } catch (Exception e) {
-            model.addAttribute("errorDeduccion", "Error al generar deducciones: " + e.getMessage());
-        }
-
-        return "redirect:/deduccion";
-    }
 }

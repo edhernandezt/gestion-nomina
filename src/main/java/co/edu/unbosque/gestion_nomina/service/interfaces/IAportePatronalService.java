@@ -7,9 +7,5 @@ import java.util.List;
 
 public interface IAportePatronalService {
 
-    void generarAportesMensuales(LocalDate fechaInicio, LocalDate fechaFin);
-
-    List<AportePatronalDTO> findAll();
-
-    List<AportePatronalDTO> findByFechas(LocalDate fechaInicio, LocalDate fechaFin);
+    List<AportePatronalDTO> findByFechasAndNombre(LocalDate fechaInicio, LocalDate fechaFin, String nombre);
 }

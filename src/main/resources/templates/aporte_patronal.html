@@ -2,35 +2,66 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Aportes Patronales</title>
+    <title>Reporte de Aportes Patronales</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
 
-<div class="container mt-4">
-    <h2>Aportes Patronales</h2>
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
 
-    <!-- Formulario para generar aportes -->
-    <form th:action="@{/aporte-patronal/generar}" method="post" class="mb-4">
-        <div class="row g-2">
-            <div class="col-md-3">
-                <label for="fechaInicioGen" class="form-label">Fecha Inicio:</label>
-                <input type="date" id="fechaInicioGen" name="fechaInicio" class="form-control" required>
-            </div>
-            <div class="col-md-3">
-                <label for="fechaFinGen" class="form-label">Fecha Fin:</label>
-                <input type="date" id="fechaFinGen" name="fechaFin" class="form-control" required>
-            </div>
-            <div class="col-md-3 align-self-end">
-                <button type="submit" class="btn btn-success">Generar Aportes</button>
-            </div>
-        </div>
+<main class="container-empleado">
+    <h4 class="titulo-reporte">Reporte de Aportes Patronales</h4>
+
+    <form th:action="@{/aporte-patronal}" method="get" class="form-filtro">
+        <label for="fechaInicio">Desde:</label>
+        <input type="date" id="fechaInicio" name="fechaInicio" th:value="${fechaInicio}">
+
+        <label for="fechaFin">Hasta:</label>
+        <input type="date" id="fechaFin" name="fechaFin" th:value="${fechaFin}">
+
+        <label for="keyword">Empleado:</label>
+        <input type="text" id="keyword" name="keyword" placeholder="Nombre o apellido" th:value="${keyword}" class="campo-busqueda"/>
+
+        <button type="submit" class="btn-control">Filtrar</button>
     </form>
 
-    <!-- Mensajes de éxito o error -->
-    <div th:if="${mensajeAporte}" class="alert alert-success" th:text="${mensajeAporte}"></div>
-    <div th:if="${errorAporte}" class="alert alert-danger" th:text="${errorAporte}"></div>
+    <div class="empleados-list">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Empleado</th>
+                <th>Salud</th>
+                <th>Pensión</th>
+                <th>ARL</th>
+                <th>Caja</th>
+                <th>ICBF</th>
+                <th>SENA</th>
+                <th>Total</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${aportes}">
+                <td th:text="${a.idAporte}">1</td>
+                <td th:text="${a.primerNombre + ' ' + a.segundoNombre + ' ' + a.primerApellido + ' ' + a.segundoApellido}">Empleado</td>
+                <td th:text="${#numbers.formatDecimal(a.salud, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(a.pension, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(a.riesgoLaboral, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(a.cajaCompensacion, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(a.icbf, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(a.sena, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(a.totalAportes, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#temporals.format(a.fechaInicio, 'yyyy-MM-dd')}">2025-01-01</td>
+                <td th:text="${#temporals.format(a.fechaFin, 'yyyy-MM-dd')}">2025-01-31</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
 
-</div>
-
+<footer th:replace="~{footer :: footer}"></footer>
 </body>
 </html>

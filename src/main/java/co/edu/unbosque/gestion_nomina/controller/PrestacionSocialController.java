@@ -26,33 +26,27 @@ public class PrestacionSocialController {
     public String mostrarVistaPrestaciones(
             @RequestParam(name = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(name = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+            @RequestParam(name = "keyword", required = false) String keyword,
             Model model) {
 
-        List<PrestacionSocialDTO> prestaciones;
-        if (fechaInicio != null && fechaFin != null) {
-            prestaciones = prestacionService.findByFechas(fechaInicio, fechaFin);
-        } else {
-            prestaciones = prestacionService.findAll();
+        // Si no se pasan fechas, usar mes actual
+        if (fechaInicio == null || fechaFin == null) {
+            LocalDate now = LocalDate.now();
+            fechaInicio = now.withDayOfMonth(1);
+            fechaFin = now.withDayOfMonth(now.lengthOfMonth());
         }
+
+        if (keyword == null) {
+            keyword = "";
+        }
+
+        List<PrestacionSocialDTO> prestaciones = prestacionService.findByFechasAndNombre(fechaInicio, fechaFin, keyword);
 
         model.addAttribute("prestaciones", prestaciones);
         model.addAttribute("fechaInicio", fechaInicio);
         model.addAttribute("fechaFin", fechaFin);
+        model.addAttribute("keyword", keyword);
+
         return "prestacion_social";
-    }
-
-    @PostMapping("/generar")
-    public String generarPrestaciones(
-            @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-            @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
-            Model model) {
-        try {
-            prestacionService.generarPrestacionesMensual(fechaInicio, fechaFin);
-            model.addAttribute("mensajePrestacion", "Prestaciones generadas exitosamente.");
-        } catch (Exception e) {
-            model.addAttribute("errorPrestacion", "Error al generar prestaciones: " + e.getMessage());
-        }
-
-        return "redirect:/prestaciones?fechaInicio=" + fechaInicio + "&fechaFin=" + fechaFin;
     }
 }

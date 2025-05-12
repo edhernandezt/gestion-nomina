@@ -5,19 +5,30 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@NamedStoredProcedureQuery(
-        name = "sp_registrar_horas_extras",
-        procedureName = "sp_registrar_horas_extras",
-        parameters = {
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pn_id_devengado", type = Integer.class),
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pn_id_tipo_hora_extra", type = Integer.class),
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pn_cantidad_horas", type = BigDecimal.class),
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = java.time.LocalDate.class),
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = java.time.LocalDate.class)
-        }
-)
+
 @Entity
 @Table(name = "horas_extras")
+@NamedStoredProcedureQuery(
+        name = "sp_registrar_horas_extras_empleado",
+        procedureName = "sp_registrar_horas_extras_empleado",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pn_id_empleado", type = Integer.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pn_id_tipo_hora_extra", type = Integer.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pn_cantidad_horas", type = BigDecimal.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class)
+        }
+)
+@NamedStoredProcedureQuery(
+        name = "sp_buscar_horas_extras_por_nombre",
+        procedureName = "sp_buscar_horas_extras_por_nombre",
+        resultClasses = HorasExtras.class,
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pv_nombre", type = String.class)
+        }
+)
 public class HorasExtras {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +36,12 @@ public class HorasExtras {
     private Integer idHoraExtra;
 
     @ManyToOne
-    @JoinColumn(name = "id_tipo_hora_extra")
-    private TipoHoraExtra tipoHoraExtra;
+    @JoinColumn(name = "id_empleado")
+    private Empleado empleado;
 
     @ManyToOne
-    @JoinColumn(name = "id_devengado")
-    private Devengado devengado;
+    @JoinColumn(name = "id_tipo_hora_extra")
+    private TipoHoraExtra tipoHoraExtra;
 
     @Column(name = "cantidad_horas")
     private BigDecimal cantidadHoras;
@@ -51,9 +62,9 @@ public class HorasExtras {
 
     }
 
-    public HorasExtras(TipoHoraExtra tipoHoraExtra, Devengado devengado, BigDecimal cantidadHoras, BigDecimal valorHora, BigDecimal totalPagado, LocalDate fechaInicio, LocalDate fechaFin) {
+    public HorasExtras(Empleado empleado, TipoHoraExtra tipoHoraExtra, BigDecimal cantidadHoras, BigDecimal valorHora, BigDecimal totalPagado, LocalDate fechaInicio, LocalDate fechaFin) {
+        this.empleado = empleado;
         this.tipoHoraExtra = tipoHoraExtra;
-        this.devengado = devengado;
         this.cantidadHoras = cantidadHoras;
         this.valorHora = valorHora;
         this.totalPagado = totalPagado;
@@ -69,20 +80,20 @@ public class HorasExtras {
         this.idHoraExtra = idHoraExtra;
     }
 
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
+
     public TipoHoraExtra getTipoHoraExtra() {
         return tipoHoraExtra;
     }
 
     public void setTipoHoraExtra(TipoHoraExtra tipoHoraExtra) {
         this.tipoHoraExtra = tipoHoraExtra;
-    }
-
-    public Devengado getDevengado() {
-        return devengado;
-    }
-
-    public void setDevengado(Devengado devengado) {
-        this.devengado = devengado;
     }
 
     public BigDecimal getCantidadHoras() {

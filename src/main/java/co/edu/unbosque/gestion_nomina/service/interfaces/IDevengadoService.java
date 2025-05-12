@@ -7,9 +7,5 @@ import java.util.List;
 
 public interface IDevengadoService {
 
-    void generarDevengadosMensual(LocalDate fechaInicio, LocalDate fechaFin);
-
-    List<DevengadoDTO> findAll();
-
-    List<DevengadoDTO> findByFechas(LocalDate fechaInicio, LocalDate fechaFin);
+    List<DevengadoDTO> findByFechasAndNombre(LocalDate fechaInicio, LocalDate fechaFin, String keyword);
 }

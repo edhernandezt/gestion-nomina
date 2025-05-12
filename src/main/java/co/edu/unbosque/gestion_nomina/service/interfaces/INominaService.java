@@ -8,8 +8,5 @@ import java.util.List;
 public interface INominaService {
 
     void generarNominaMensual(LocalDate fechaInicio, LocalDate fechaFin);
-
-    List<NominaDTO> findAll();
-
-    List<NominaDTO> findByFechas(LocalDate fechaInicio, LocalDate fechaFin);
+    List<NominaDTO> findByFechasAndNombre(LocalDate fechaInicio, LocalDate fechaFin, String nombre);
 }

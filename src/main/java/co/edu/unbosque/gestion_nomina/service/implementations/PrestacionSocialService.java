@@ -25,24 +25,9 @@ public class PrestacionSocialService implements IPrestacionSocialService {
     }
 
     @Override
-    @Transactional
-    public void generarPrestacionesMensual(LocalDate fechaInicio, LocalDate fechaFin) {
-        prestacionRepository.generarPrestacionesMensual(fechaInicio, fechaFin);
-    }
-
-    @Override
     @Transactional(readOnly = true)
-    public List<PrestacionSocialDTO> findAll() {
-        return prestacionRepository.listarPrestaciones().stream()
-                .map(prestacion -> modelMapper.map(prestacion, PrestacionSocialDTO.class))
-                .toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<PrestacionSocialDTO> findByFechas(LocalDate fechaInicio, LocalDate fechaFin) {
-        return prestacionRepository.findByFechaInicioGreaterThanEqualAndFechaFinLessThanEqual(fechaInicio, fechaFin)
-                .stream()
+    public List<PrestacionSocialDTO> findByFechasAndNombre(LocalDate fechaInicio, LocalDate fechaFin, String nombre) {
+        return prestacionRepository.buscarPorNombreYFechas(fechaInicio, fechaFin, nombre).stream()
                 .map(prestacion -> modelMapper.map(prestacion, PrestacionSocialDTO.class))
                 .collect(Collectors.toList());
     }

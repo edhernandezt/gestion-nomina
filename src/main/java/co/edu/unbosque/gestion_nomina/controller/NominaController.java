@@ -27,18 +27,26 @@ public class NominaController {
     public String mostrarVistaNomina(
             @RequestParam(name = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(name = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+            @RequestParam(name = "keyword", required = false) String keyword,
             Model model) {
 
-        List<NominaDTO> nominas;
-        if (fechaInicio != null && fechaFin != null) {
-            nominas = nominaService.findByFechas(fechaInicio, fechaFin);
-        } else {
-            nominas = nominaService.findAll();
+        // Si no se pasan fechas, se usa el mes actual
+        if (fechaInicio == null || fechaFin == null) {
+            LocalDate hoy = LocalDate.now();
+            fechaInicio = hoy.withDayOfMonth(1);
+            fechaFin = hoy.withDayOfMonth(hoy.lengthOfMonth());
         }
+
+        if (keyword == null) {
+            keyword = "";
+        }
+
+        List<NominaDTO> nominas = nominaService.findByFechasAndNombre(fechaInicio, fechaFin, keyword);
 
         model.addAttribute("nominas", nominas);
         model.addAttribute("fechaInicio", fechaInicio);
         model.addAttribute("fechaFin", fechaFin);
+        model.addAttribute("keyword", keyword);
         return "generar_nomina";
     }
 
@@ -47,6 +55,7 @@ public class NominaController {
             @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
             RedirectAttributes redirectAttributes) {
+
         try {
             nominaService.generarNominaMensual(fechaInicio, fechaFin);
             redirectAttributes.addFlashAttribute("mensajeNomina", "Nómina generada exitosamente.");
@@ -59,7 +68,9 @@ public class NominaController {
                                 ? "Ya existe una nómina para ese rango de fechas."
                                 : "Error al generar la nómina.");
             }
+            return "redirect:/nomina-mensual";
         }
+
         return "redirect:/nomina-mensual?fechaInicio=" + fechaInicio + "&fechaFin=" + fechaFin;
     }
 }

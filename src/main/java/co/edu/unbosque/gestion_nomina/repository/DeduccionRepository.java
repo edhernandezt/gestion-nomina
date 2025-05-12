@@ -12,16 +12,10 @@ import java.util.List;
 @Repository
 public interface DeduccionRepository extends CrudRepository<Deduccion, Integer> {
 
-    @Procedure(procedureName = "sp_generar_deducciones_mensual")
-    void generarDeduccionesMensual(
+    @Procedure(name = "sp_buscar_deducciones_por_nombre")
+    List<Deduccion> buscarPorNombreYFechas(
             @Param("pd_fecha_inicio") LocalDate fechaInicio,
-            @Param("pd_fecha_fin") LocalDate fechaFin
+            @Param("pd_fecha_fin") LocalDate fechaFin,
+            @Param("pv_nombre") String nombre
     );
-
-    // Para listar todas las deucciones si usas un procedimiento almacenado
-    @Procedure(name = "sp_listar_deducciones")
-    List<Deduccion> listarDeducciones();
-
-    // Consulta por fechas si estás usando repositorio directo
-    List<Deduccion> findByFechaInicioGreaterThanEqualAndFechaFinLessThanEqual(LocalDate fechaInicio, LocalDate fechaFin);
 }

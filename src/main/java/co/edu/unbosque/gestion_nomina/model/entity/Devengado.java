@@ -4,24 +4,19 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-@NamedStoredProcedureQuery(
-        name = "sp_generar_devengados_mensual",
-        procedureName = "sp_generar_devengados_mensual",
-        parameters = {
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class)
-        }
-)
-@NamedStoredProcedureQuery(
-        name = "sp_listar_devengados",
-        procedureName = "sp_listar_devengados",
-        resultClasses = Devengado.class
-)
 @Entity
 @Table(name = "devengado")
+@NamedStoredProcedureQuery(
+        name = "sp_buscar_devengados_por_nombre",
+        procedureName = "sp_buscar_devengados_por_nombre",
+        resultClasses = Devengado.class,
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = java.time.LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = java.time.LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pv_nombre", type = String.class)
+        }
+)
 public class Devengado {
 
     @Id
@@ -45,6 +40,9 @@ public class Devengado {
     @Column(name = "auxilio_transporte")
     private BigDecimal auxilioTransporte;
 
+    @Column(name = "total_horas_extras")
+    private BigDecimal totalHorasExtras;
+
     @Column(name = "total_devengado")
     private BigDecimal totalDevengado;
 
@@ -54,31 +52,24 @@ public class Devengado {
     @Column(name = "fecha_fin")
     private LocalDate fechaFin;
 
-    @OneToMany(mappedBy = "devengado", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<HorasExtras> horasExtras = new ArrayList<>();
-
     @OneToOne(mappedBy = "devengado", cascade = CascadeType.ALL, orphanRemoval = true)
     private Deduccion deduccion;
 
-    // Constructores
     public Devengado() {}
 
-    public Devengado(Empleado empleado, BigDecimal horasTrabajadas, BigDecimal sueldo, BigDecimal subTotal,
-                     BigDecimal auxilioTransporte, BigDecimal totalDevengado,
-                     LocalDate fechaInicio, LocalDate fechaFin, List<HorasExtras> horasExtras, Deduccion deduccion) {
+    public Devengado(Empleado empleado, BigDecimal horasTrabajadas, BigDecimal sueldo, BigDecimal subTotal, BigDecimal auxilioTransporte, BigDecimal totalHorasExtras, BigDecimal totalDevengado, LocalDate fechaInicio, LocalDate fechaFin, Deduccion deduccion) {
         this.empleado = empleado;
         this.horasTrabajadas = horasTrabajadas;
         this.sueldo = sueldo;
         this.subTotal = subTotal;
         this.auxilioTransporte = auxilioTransporte;
+        this.totalHorasExtras = totalHorasExtras;
         this.totalDevengado = totalDevengado;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.horasExtras = horasExtras;
         this.deduccion = deduccion;
     }
 
-    // Getters y setters
     public Integer getIdDevengado() {
         return idDevengado;
     }
@@ -127,6 +118,14 @@ public class Devengado {
         this.auxilioTransporte = auxilioTransporte;
     }
 
+    public BigDecimal getTotalHorasExtras() {
+        return totalHorasExtras;
+    }
+
+    public void setTotalHorasExtras(BigDecimal totalHorasExtras) {
+        this.totalHorasExtras = totalHorasExtras;
+    }
+
     public BigDecimal getTotalDevengado() {
         return totalDevengado;
     }
@@ -149,14 +148,6 @@ public class Devengado {
 
     public void setFechaFin(LocalDate fechaFin) {
         this.fechaFin = fechaFin;
-    }
-
-    public List<HorasExtras> getHorasExtras() {
-        return horasExtras;
-    }
-
-    public void setHorasExtras(List<HorasExtras> horasExtras) {
-        this.horasExtras = horasExtras;
     }
 
     public Deduccion getDeduccion() {

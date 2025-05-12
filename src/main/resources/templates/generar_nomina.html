@@ -3,34 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <title>Generar Nómina</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
-<div class="container mt-4">
-    <h2>Generar Nómina Mensual</h2>
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+<main class="container-empleado">
+    <h4 class="titulo-reporte">Generar Nómina Mensual</h4>
+
+    <!-- Flash messages invisibles -->
+    <span id="flash-success" th:if="${mensajeNomina}" th:text="${mensajeNomina}" hidden></span>
+    <span id="flash-error" th:if="${errorNomina}" th:text="${errorNomina}" hidden></span>
 
     <!-- Formulario para generar nómina -->
-    <form th:action="@{/nomina-mensual/generar}" method="post" class="mb-4">
-        <div class="row g-2">
-            <div class="col-md-3">
-                <label for="fechaInicioGen" class="form-label">Fecha Inicio:</label>
-                <input type="date" id="fechaInicioGen" name="fechaInicio" class="form-control" required>
-            </div>
-            <div class="col-md-3">
-                <label for="fechaFinGen" class="form-label">Fecha Fin:</label>
-                <input type="date" id="fechaFinGen" name="fechaFin" class="form-control" required>
-            </div>
-            <div class="col-md-3 align-self-end">
-                <button type="submit" class="btn btn-success">Generar Nómina</button>
-            </div>
-        </div>
+    <form th:action="@{/nomina-mensual/generar}" method="post" class="form-filtro">
+        <label for="fechaInicioGen">Fecha Inicio:</label>
+        <input type="date" id="fechaInicioGen" name="fechaInicio" required>
+
+        <label for="fechaFinGen">Fecha Fin:</label>
+        <input type="date" id="fechaFinGen" name="fechaFin" required>
+
+        <button type="submit" class="btn-control">Generar Nómina</button>
     </form>
 
-    <!-- Mensajes -->
-    <div th:if="${mensajeNomina}" class="alert alert-success" th:text="${mensajeNomina}"></div>
-    <div th:if="${errorNomina}" class="alert alert-danger" th:text="${errorNomina}"></div>
+    <!-- Filtro para buscar nóminas existentes -->
+    <form th:action="@{/nomina-mensual}" method="get" class="form-filtro">
+        <label for="fechaInicio">Desde:</label>
+        <input type="date" id="fechaInicio" name="fechaInicio" th:value="${fechaInicio}">
 
-</div>
+        <label for="fechaFin">Hasta:</label>
+        <input type="date" id="fechaFin" name="fechaFin" th:value="${fechaFin}">
+
+        <label for="keyword">Empleado:</label>
+        <input type="text" id="keyword" name="keyword" placeholder="Nombre o apellido" th:value="${keyword}" class="campo-busqueda"/>
+
+        <button type="submit" class="btn-control">Filtrar Nóminas</button>
+    </form>
+
+    <!-- Tabla de nóminas -->
+    <div class="empleados-list">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Empleado</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Total Devengado</th>
+                <th>Total Deducciones</th>
+                <th>Prestaciones</th>
+                <th>Aportes</th>
+                <th>Total a Pagar</th>
+                <th>Total Nómina</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="n : ${nominas}">
+                <td th:text="${n.idNomina}">1</td>
+                <td th:text="${n.primerNombre + ' ' + n.segundoNombre + ' ' + n.primerApellido + ' ' + n.segundoApellido}">Empleado</td>
+                <td th:text="${#temporals.format(n.fechaInicio, 'yyyy-MM-dd')}">2025-01-01</td>
+                <td th:text="${#temporals.format(n.fechaFin, 'yyyy-MM-dd')}">2025-01-31</td>
+                <td th:text="${#numbers.formatDecimal(n.totalDevengado, 0, 'COMMA', 2, 'POINT')}">$0</td>
+                <td th:text="${#numbers.formatDecimal(n.totalDeducciones, 0, 'COMMA', 2, 'POINT')}">$0</td>
+                <td th:text="${#numbers.formatDecimal(n.totalPrestaciones, 0, 'COMMA', 2, 'POINT')}">$0</td>
+                <td th:text="${#numbers.formatDecimal(n.totalAportes, 0, 'COMMA', 2, 'POINT')}">$0</td>
+                <td th:text="${#numbers.formatDecimal(n.totalAPagarEmpleado, 0, 'COMMA', 2, 'POINT')}">$0</td>
+                <td th:text="${#numbers.formatDecimal(n.totalNomina, 0, 'COMMA', 2, 'POINT')}">$0</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const hoy = new Date();
+        const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        const fechaMin = primerDiaMes.toISOString().split("T")[0];
+
+        const fechaInicioInput = document.querySelector("input[name='fechaInicio']");
+        const fechaFinInput = document.querySelector("input[name='fechaFin']");
+
+        if (fechaInicioInput && fechaFinInput) {
+            // Solo limitar fechas mínimas
+            fechaInicioInput.setAttribute("min", fechaMin);
+            fechaFinInput.setAttribute("min", fechaMin);
+
+            // Preseleccionar automáticamente el mes actual
+            const primerDiaStr = fechaMin;
+            const ultimoDiaMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0).toISOString().split("T")[0];
+
+            fechaInicioInput.value = primerDiaStr;
+            fechaFinInput.value = ultimoDiaMes;
+        }
+
+        // Notificaciones
+        const mensaje = document.getElementById("flash-success")?.textContent.trim();
+        const error = document.getElementById("flash-error")?.textContent.trim();
+
+        if (mensaje) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: mensaje,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        } else if (error) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: error,
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true
+            });
+        }
+    });
+</script>
 
 </body>
 </html>

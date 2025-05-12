@@ -18,8 +18,10 @@ public interface NominaRepository extends JpaRepository<Nomina, Integer> {
             @Param("pd_fecha_fin") LocalDate fechaFin
     );
 
-    @Procedure(name = "sp_listar_nominas")
-    List<Nomina> listarNominas();
-
-    List<Nomina> findByFechaInicioGreaterThanEqualAndFechaFinLessThanEqual(LocalDate fechaInicio, LocalDate fechaFin);
+    @Procedure(name = "sp_buscar_nominas_por_nombre")
+    List<Nomina> buscarPorNombreYFechas(
+            @Param("pd_fecha_inicio") LocalDate fechaInicio,
+            @Param("pd_fecha_fin") LocalDate fechaFin,
+            @Param("pv_nombre") String nombre
+    );
 }

@@ -33,11 +33,6 @@
 <main class="container-empleado">
     <h4 class="titulo-reporte">Gestión de Departamentos</h4>
 
-    <div style="margin: 20px 0;">
-        <a th:href="@{/configuracion}" class="boton-volver">← Volver a Configuración</a>
-    </div>
-
-
     <!-- Barra de búsqueda -->
     <div class="empleados-barra-controles" style="display: flex; gap: 10px;">
         <form th:action="@{/departamentos/buscar}" method="get" style="display: flex; gap: 10px;">

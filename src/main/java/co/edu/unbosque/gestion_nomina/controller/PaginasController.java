@@ -30,31 +30,14 @@ public class PaginasController {
         return "index";
     }
 
-    @GetMapping("/nomina")
-    public String mostrarNomina(Model model) {
-        List<EmpleadoDTO> empleados = empleadoService.findAll();
-
-        BigDecimal totalNomina = empleados.stream()
-                .map(e -> e.getSalarioBasico() != null ? e.getSalarioBasico() : BigDecimal.ZERO)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        model.addAttribute("totalNomina", totalNomina);
-        model.addAttribute("ultimoPago", "03/04/2025");
-        return "nomina";
+    @GetMapping("/opciones-nomina")
+    public String mostrarVistaOpcionesNomina() {
+        return "opciones_nomina";
     }
 
-    @GetMapping("/configuracion")
+    @GetMapping("/administracion")
     public String configuracion() {
-        return "configuracion";
+        return "administracion";
     }
 
-    @GetMapping("/inicio")
-    public String redirigirInicio() {
-        return "redirect:/";
-    }
-
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
 }

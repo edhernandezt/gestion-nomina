@@ -15,6 +15,7 @@ public class DevengadoDTO {
     private BigDecimal sueldo;
     private BigDecimal subTotal;
     private BigDecimal auxilioTransporte;
+    private BigDecimal totalHorasExtras;
     private BigDecimal totalDevengado;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
@@ -22,7 +23,7 @@ public class DevengadoDTO {
     public DevengadoDTO() {
     }
 
-    public DevengadoDTO(Integer idDevengado, Integer idEmpleado, String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, BigDecimal horasTrabajadas, BigDecimal sueldo, BigDecimal subTotal, BigDecimal auxilioTransporte, BigDecimal totalDevengado, LocalDate fechaInicio, LocalDate fechaFin) {
+    public DevengadoDTO(Integer idDevengado, Integer idEmpleado, String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, BigDecimal horasTrabajadas, BigDecimal sueldo, BigDecimal subTotal, BigDecimal auxilioTransporte, BigDecimal totalHorasExtras, BigDecimal totalDevengado, LocalDate fechaInicio, LocalDate fechaFin) {
         this.idDevengado = idDevengado;
         this.idEmpleado = idEmpleado;
         this.primerNombre = primerNombre;
@@ -33,12 +34,12 @@ public class DevengadoDTO {
         this.sueldo = sueldo;
         this.subTotal = subTotal;
         this.auxilioTransporte = auxilioTransporte;
+        this.totalHorasExtras = totalHorasExtras;
         this.totalDevengado = totalDevengado;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
     }
 
-    // Getters y Setters
     public Integer getIdDevengado() {
         return idDevengado;
     }
@@ -117,6 +118,14 @@ public class DevengadoDTO {
 
     public void setAuxilioTransporte(BigDecimal auxilioTransporte) {
         this.auxilioTransporte = auxilioTransporte;
+    }
+
+    public BigDecimal getTotalHorasExtras() {
+        return totalHorasExtras;
+    }
+
+    public void setTotalHorasExtras(BigDecimal totalHorasExtras) {
+        this.totalHorasExtras = totalHorasExtras;
     }
 
     public BigDecimal getTotalDevengado() {

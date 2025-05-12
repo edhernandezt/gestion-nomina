@@ -24,24 +24,12 @@ public class DeduccionService implements IDeduccionService {
     }
 
     @Override
-    @Transactional
-    public void generarDeduccionesMensual(LocalDate fechaInicio, LocalDate fechaFin) {
-        deduccionRepository.generarDeduccionesMensual(fechaInicio, fechaFin);
-    }
-
-    @Override
     @Transactional(readOnly = true)
-    public List<DeduccionDTO> findAll() {
-        return deduccionRepository.listarDeducciones().stream()
-                .map(deduccion -> modelMapper.map(deduccion, DeduccionDTO.class))
+    public List<DeduccionDTO> findByFechasAndNombre(LocalDate fechaInicio, LocalDate fechaFin, String nombre) {
+        return deduccionRepository.buscarPorNombreYFechas(fechaInicio, fechaFin, nombre)
+                .stream()
+                .map(d -> modelMapper.map(d, DeduccionDTO.class))
                 .toList();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<DeduccionDTO> findByFechas(LocalDate fechaInicio, LocalDate fechaFin) {
-        return deduccionRepository.findByFechaInicioGreaterThanEqualAndFechaFinLessThanEqual(fechaInicio, fechaFin).stream()
-                .map(deduccion -> modelMapper.map(deduccion, DeduccionDTO.class))
-                .toList();
-    }
 }

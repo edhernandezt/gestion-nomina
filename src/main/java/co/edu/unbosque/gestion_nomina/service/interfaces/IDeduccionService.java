@@ -7,9 +7,5 @@ import java.util.List;
 
 public interface IDeduccionService {
 
-    void generarDeduccionesMensual(LocalDate fechaInicio, LocalDate fechaFin);
-
-    List<DeduccionDTO> findAll();
-
-    List<DeduccionDTO> findByFechas(LocalDate fechaInicio, LocalDate fechaFin);
+    List<DeduccionDTO> findByFechasAndNombre(LocalDate fechaInicio, LocalDate fechaFin, String nombre);
 }

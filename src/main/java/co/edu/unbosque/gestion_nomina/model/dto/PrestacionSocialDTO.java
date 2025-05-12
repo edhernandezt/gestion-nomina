@@ -6,6 +6,10 @@ import java.time.LocalDate;
 public class PrestacionSocialDTO {
     private Integer idPrestacion;
     private Integer empleadoId;
+    private String primerNombre;
+    private String segundoNombre;
+    private String primerApellido;
+    private String segundoApellido;
     private BigDecimal cesantias;
     private BigDecimal intereses;
     private BigDecimal prima;
@@ -16,9 +20,13 @@ public class PrestacionSocialDTO {
 
     public PrestacionSocialDTO() {}
 
-    public PrestacionSocialDTO(Integer idPrestacion, Integer empleadoId, BigDecimal cesantias, BigDecimal intereses, BigDecimal prima, BigDecimal vacaciones, BigDecimal totalPrestaciones, LocalDate fechaInicio, LocalDate fechaFin) {
+    public PrestacionSocialDTO(Integer idPrestacion, Integer empleadoId, String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, BigDecimal cesantias, BigDecimal intereses, BigDecimal prima, BigDecimal vacaciones, BigDecimal totalPrestaciones, LocalDate fechaInicio, LocalDate fechaFin) {
         this.idPrestacion = idPrestacion;
         this.empleadoId = empleadoId;
+        this.primerNombre = primerNombre;
+        this.segundoNombre = segundoNombre;
+        this.primerApellido = primerApellido;
+        this.segundoApellido = segundoApellido;
         this.cesantias = cesantias;
         this.intereses = intereses;
         this.prima = prima;
@@ -42,6 +50,38 @@ public class PrestacionSocialDTO {
 
     public void setEmpleadoId(Integer empleadoId) {
         this.empleadoId = empleadoId;
+    }
+
+    public String getPrimerNombre() {
+        return primerNombre;
+    }
+
+    public void setPrimerNombre(String primerNombre) {
+        this.primerNombre = primerNombre;
+    }
+
+    public String getSegundoNombre() {
+        return segundoNombre;
+    }
+
+    public void setSegundoNombre(String segundoNombre) {
+        this.segundoNombre = segundoNombre;
+    }
+
+    public String getPrimerApellido() {
+        return primerApellido;
+    }
+
+    public void setPrimerApellido(String primerApellido) {
+        this.primerApellido = primerApellido;
+    }
+
+    public String getSegundoApellido() {
+        return segundoApellido;
+    }
+
+    public void setSegundoApellido(String segundoApellido) {
+        this.segundoApellido = segundoApellido;
     }
 
     public BigDecimal getCesantias() {

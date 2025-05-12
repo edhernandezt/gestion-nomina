@@ -15,45 +15,37 @@ import java.util.List;
 @RequestMapping("/aporte-patronal")
 public class AportePatronalController {
 
-    private final IAportePatronalService aportePatronalService;
+    private final IAportePatronalService aporteService;
 
     @Autowired
-    public AportePatronalController(IAportePatronalService aportePatronalService) {
-        this.aportePatronalService = aportePatronalService;
+    public AportePatronalController(IAportePatronalService aporteService) {
+        this.aporteService = aporteService;
     }
 
     @GetMapping
     public String mostrarVistaAportes(
             @RequestParam(name = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam(name = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+            @RequestParam(name = "keyword", required = false) String keyword,
             Model model) {
 
-        List<AportePatronalDTO> aportes;
-        if (fechaInicio != null && fechaFin != null) {
-            aportes = aportePatronalService.findByFechas(fechaInicio, fechaFin);
-        } else {
-            aportes = aportePatronalService.findAll();
+        if (fechaInicio == null || fechaFin == null) {
+            LocalDate now = LocalDate.now();
+            fechaInicio = now.withDayOfMonth(1);
+            fechaFin = now.withDayOfMonth(now.lengthOfMonth());
         }
+
+        if (keyword == null) {
+            keyword = "";
+        }
+
+        List<AportePatronalDTO> aportes = aporteService.findByFechasAndNombre(fechaInicio, fechaFin, keyword);
 
         model.addAttribute("aportes", aportes);
         model.addAttribute("fechaInicio", fechaInicio);
         model.addAttribute("fechaFin", fechaFin);
+        model.addAttribute("keyword", keyword);
+
         return "aporte_patronal";
-    }
-
-    @PostMapping("/generar")
-    public String generarAportes(
-            @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-            @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
-            Model model) {
-
-        try {
-            aportePatronalService.generarAportesMensuales(fechaInicio, fechaFin);
-            model.addAttribute("mensajeAporte", "Aportes patronales generados exitosamente.");
-        } catch (Exception e) {
-            model.addAttribute("errorAporte", "Error al generar aportes: " + e.getMessage());
-        }
-
-        return "redirect:/aporte-patronal?fechaInicio=" + fechaInicio + "&fechaFin=" + fechaFin;
     }
 }

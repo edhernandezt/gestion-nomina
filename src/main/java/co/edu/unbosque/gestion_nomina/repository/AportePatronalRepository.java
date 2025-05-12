@@ -12,16 +12,10 @@ import java.util.List;
 @Repository
 public interface AportePatronalRepository extends CrudRepository<AportePatronal, Integer> {
 
-    @Procedure(procedureName = "sp_generar_aportes_patronales_mensual")
-    void generarAportesMensuales(
+    @Procedure(name = "sp_buscar_aportes_patronales_por_nombre")
+    List<AportePatronal> buscarPorNombreYFechas(
             @Param("pd_fecha_inicio") LocalDate fechaInicio,
-            @Param("pd_fecha_fin") LocalDate fechaFin
-    );
-
-    @Procedure(name = "sp_listar_aportes_patronales")
-    List<AportePatronal> listarAportesPatronales();
-
-    List<AportePatronal> findByFechaInicioGreaterThanEqualAndFechaFinLessThanEqual(
-            LocalDate fechaInicio, LocalDate fechaFin
+            @Param("pd_fecha_fin") LocalDate fechaFin,
+            @Param("pv_nombre") String nombre
     );
 }

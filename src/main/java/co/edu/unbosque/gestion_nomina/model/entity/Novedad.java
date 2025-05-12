@@ -3,6 +3,8 @@ package co.edu.unbosque.gestion_nomina.model.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "novedad")
 @NamedStoredProcedureQuery(
         name = "sp_registrar_novedad",
         procedureName = "sp_registrar_novedad",
@@ -14,8 +16,16 @@ import java.time.LocalDate;
                 @StoredProcedureParameter(mode = ParameterMode.IN, name = "pv_observaciones", type = String.class)
         }
 )
-@Entity
-@Table(name = "novedad")
+@NamedStoredProcedureQuery(
+        name = "sp_buscar_novedades_por_nombre",
+        procedureName = "sp_buscar_novedades_por_nombre",
+        resultClasses = Novedad.class,
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pv_nombre", type = String.class)
+        }
+)
 public class Novedad {
 
     @Id

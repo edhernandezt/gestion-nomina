@@ -5,21 +5,18 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@NamedStoredProcedureQuery(
-        name = "sp_generar_aportes_patronales_mensual",
-        procedureName = "sp_generar_aportes_patronales_mensual",
-        parameters = {
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class)
-        }
-)
-@NamedStoredProcedureQuery(
-        name = "sp_listar_aportes_patronales",
-        procedureName = "sp_listar_aportes_patronales",
-        resultClasses = AportePatronal.class
-)
 @Entity
 @Table(name = "aportes_patronales")
+@NamedStoredProcedureQuery(
+        name = "sp_buscar_aportes_patronales_por_nombre",
+        procedureName = "sp_buscar_aportes_patronales_por_nombre",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = java.time.LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = java.time.LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pv_nombre", type = String.class)
+        },
+        resultClasses = AportePatronal.class
+)
 public class AportePatronal {
 
     @Id

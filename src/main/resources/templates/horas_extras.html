@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Horas Extras</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+<main class="container-empleado">
+    <h2 class="titulo-reporte">Registrar Horas Extras</h2>
+
+    <div id="flash-success" th:if="${mensajeHoras != null}" th:text="${mensajeHoras}" style="display: none;"></div>
+    <div id="flash-error" th:if="${errorHoras != null}" th:text="${errorHoras}" style="display: none;"></div>
+
+    <div class="contenedor-formulario">
+        <form class="formulario-empleado" th:action="@{/horas-extras/registrar}" method="post">
+            <div class="campo-formulario">
+                <label>Empleado:</label>
+                <select name="idEmpleado" required>
+                    <option value="" disabled selected>Seleccione un empleado</option>
+                    <option th:each="e : ${empleados}"
+                            th:value="${e.idEmpleado}"
+                            th:text="${e.primerNombre + ' ' + e.segundoNombre + ' ' + e.primerApellido + ' ' + e.segundoApellido}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="campo-formulario">
+                <label>Tipo de Hora Extra:</label>
+                <select name="idTipoHoraExtra" required>
+                    <option value="" disabled selected>Seleccione un tipo</option>
+                    <option th:each="t : ${tiposHoraExtra}"
+                            th:value="${t.idTipoHoraExtra}"
+                            th:text="${t.descripcion}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="campo-formulario">
+                <label>Cantidad de Horas:</label>
+                <input type="number" name="cantidadHoras" min="0" step="0.01" required />
+            </div>
+
+            <div class="campo-formulario">
+                <label>Fecha Inicio:</label>
+                <input type="date" name="fechaInicio" required />
+            </div>
+
+            <div class="campo-formulario">
+                <label>Fecha Fin:</label>
+                <input type="date" name="fechaFin" required />
+            </div>
+
+            <div class="botones-formulario">
+                <button type="submit" class="btn-control">Registrar</button>
+            </div>
+        </form>
+    </div>
+
+    <form th:action="@{/horas-extras}" method="get" class="form-filtro">
+        <label for="fechaInicio">Desde:</label>
+        <input type="date" name="fechaInicio" id="fechaInicio" th:value="${fechaInicio}" required>
+
+        <label for="fechaFin">Hasta:</label>
+        <input type="date" name="fechaFin" id="fechaFin" th:value="${fechaFin}" required>
+
+        <label for="keyword">Empleado:</label>
+        <input type="text" id="keyword" name="keyword" placeholder="Nombre o apellido" th:value="${keyword}" class="campo-busqueda"/>
+
+        <button type="submit" class="btn-control">Filtrar</button>
+    </form>
+
+    <h2 class="titulo-reporte">Listado de Horas Extras</h2>
+    <div class="empleados-list">
+        <table>
+            <thead>
+            <tr>
+                <th>Empleado</th>
+                <th>Tipo</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Horas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="h : ${horasExtras}">
+                <td th:text="${h.primerNombre + ' ' + h.segundoNombre + ' ' + h.primerApellido + ' ' + h.segundoApellido}">Empleado</td>
+                <td th:text="${h.descripcionTipo}">Tipo</td>
+                <td th:text="${#temporals.format(h.fechaInicio, 'dd/MM/yyyy')}">Inicio</td>
+                <td th:text="${#temporals.format(h.fechaFin, 'dd/MM/yyyy')}">Fin</td>
+                <td th:text="${h.cantidadHoras}">Horas</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const hoy = new Date();
+        const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        const fechaMinima = primerDiaMes.toISOString().split("T")[0];
+
+        document.querySelector("input[name='fechaInicio']").setAttribute("min", fechaMinima);
+        document.querySelector("input[name='fechaFin']").setAttribute("min", fechaMinima);
+
+        const mensaje = document.getElementById("flash-success")?.textContent.trim();
+        const error = document.getElementById("flash-error")?.textContent.trim();
+
+        if (mensaje) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: mensaje,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        } else if (error) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: error,
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

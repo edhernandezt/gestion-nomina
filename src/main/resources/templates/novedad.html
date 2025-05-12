@@ -1,158 +1,151 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Gestión de Novedades</title>
     <meta charset="UTF-8">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-
-        .card {
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 20px;
-            max-width: 700px;
-            margin: 0 auto 30px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            font-weight: bold;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-        }
-
-        .submit-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .success-message {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-        }
-
-        .error-message {
-            background-color: #f44336;
-            color: white;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid #999;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-
-        h1 {
-            text-align: center;
-        }
-    </style>
+    <title>Gestión de Novedades</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
-<div class="card">
-    <h1>Registrar Novedad</h1>
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
 
-    <!-- Mensajes -->
-    <div th:if="${mensajeNovedad != null}" class="success-message" th:text="${mensajeNovedad}"></div>
-    <div th:if="${errorNovedad != null}" class="error-message" th:text="${errorNovedad}"></div>
+<main class="container-empleado">
+    <h2 class="titulo-reporte">Registrar Novedad</h2>
 
-    <form th:action="@{/novedad/registrar}" method="post">
-        <div class="form-group">
-            <label>Empleado:</label>
-            <select name="idEmpleado" required>
-                <option value="" disabled selected>Seleccione un empleado</option>
-                <option th:each="e : ${empleados}"
-                        th:value="${e.idEmpleado}"
-                        th:text="${e.primerNombre + ' ' + e.primerApellido}">
-                </option>
-            </select>
-        </div>
+    <!-- Mensajes flash ocultos -->
+    <div id="flash-success" th:if="${mensajeNovedad != null}" th:text="${mensajeNovedad}" style="display: none;"></div>
+    <div id="flash-error" th:if="${errorNovedad != null}" th:text="${errorNovedad}" style="display: none;"></div>
 
-        <div class="form-group">
-            <label>Tipo de Novedad:</label>
-            <select name="idTipoNovedad" required>
-                <option value="" disabled selected>Seleccione un tipo</option>
-                <option th:each="t : ${tiposNovedad}"
-                        th:value="${t.idTipoNovedad}"
-                        th:text="${t.descripcion}">
-                </option>
-            </select>
-        </div>
+    <!-- Formulario de novedad -->
+    <div class="contenedor-formulario">
+        <form class="formulario-empleado" th:action="@{/novedad/registrar}" method="post">
+            <div class="campo-formulario">
+                <label>Empleado:</label>
+                <select name="idEmpleado" required>
+                    <option value="" disabled selected>Seleccione un empleado</option>
+                    <option th:each="e : ${empleados}"
+                            th:value="${e.idEmpleado}"
+                            th:text="${e.primerNombre + ' ' + e.segundoNombre + ' ' + e.primerApellido + ' ' + e.segundoApellido}">
+                    </option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label>Fecha Inicio:</label>
-            <input type="date" name="fechaInicio" required>
-        </div>
+            <div class="campo-formulario">
+                <label>Tipo de Novedad:</label>
+                <select name="idTipoNovedad" required>
+                    <option value="" disabled selected>Seleccione un tipo</option>
+                    <option th:each="t : ${tiposNovedad}"
+                            th:value="${t.idTipoNovedad}"
+                            th:text="${t.descripcion}">
+                    </option>
+                </select>
+            </div>
 
-        <div class="form-group">
-            <label>Fecha Fin:</label>
-            <input type="date" name="fechaFin" required>
-        </div>
+            <div class="campo-formulario">
+                <label>Fecha Inicio:</label>
+                <input type="date" name="fechaInicio" required />
+            </div>
 
-        <div class="form-group">
-            <label>Observaciones:</label>
-            <textarea name="observaciones" rows="3" placeholder="Observaciones (opcional)"></textarea>
-        </div>
+            <div class="campo-formulario">
+                <label>Fecha Fin:</label>
+                <input type="date" name="fechaFin" required />
+            </div>
 
-        <button type="submit" class="submit-btn">Registrar Novedad</button>
+            <div class="campo-formulario">
+                <label>Observaciones:</label>
+                <textarea name="observaciones" rows="3" placeholder="Observaciones (opcional)"></textarea>
+            </div>
+
+            <div class="botones-formulario">
+                <button type="submit" class="btn-control">Registrar</button>
+            </div>
+        </form>
+    </div>
+
+    <form th:action="@{/novedad}" method="get" class="form-filtro">
+        <label for="fechaInicio">Desde:</label>
+        <input type="date" name="fechaInicio" id="fechaInicio" th:value="${fechaInicio}" required>
+
+        <label for="fechaFin">Hasta:</label>
+        <input type="date" name="fechaFin" id="fechaFin" th:value="${fechaFin}" required>
+
+        <label for="keyword">Empleado:</label>
+        <input type="text" id="keyword" name="keyword" placeholder="Nombre o apellido" th:value="${keyword}" class="campo-busqueda"/>
+
+        <button type="submit" class="btn-control">Filtrar</button>
     </form>
-</div>
 
-<!-- Tabla de novedades -->
-<div class="card">
-    <h2>Listado de Novedades</h2>
-    <table>
-        <thead>
-        <tr>
-            <th>Empleado</th>
-            <th>Tipo</th>
-            <th>Inicio</th>
-            <th>Fin</th>
-            <th>Días</th>
-            <th>Observaciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="n : ${novedades}">
-            <td th:text="${n.primerNombre + ' ' + n.primerApellido}">Empleado</td>
-            <td th:text="${n.descripcion}">Tipo</td>
-            <td th:text="${#temporals.format(n.fechaInicio, 'dd/MM/yyyy')}">Inicio</td>
-            <td th:text="${#temporals.format(n.fechaFin, 'dd/MM/yyyy')}">Fin</td>
-            <td th:text="${n.diasAfectados}">Días</td>
-            <td th:text="${n.observaciones}">Observaciones</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+    <!-- Tabla de novedades -->
+    <h2 class="titulo-reporte">Listado de Novedades</h2>
+    <div class="empleados-list">
+        <table>
+            <thead>
+            <tr>
+                <th>Empleado</th>
+                <th>Tipo</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Días</th>
+                <th>Observaciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="n : ${novedades}">
+                <td th:text="${n.primerNombre + ' ' + n.segundoNombre + ' ' + n.primerApellido + ' ' + n.segundoApellido}">Empleado</td>
+                <td th:text="${n.descripcion}">Tipo</td>
+                <td th:text="${#temporals.format(n.fechaInicio, 'dd/MM/yyyy')}">Inicio</td>
+                <td th:text="${#temporals.format(n.fechaFin, 'dd/MM/yyyy')}">Fin</td>
+                <td th:text="${n.diasAfectados}">Días</td>
+                <td th:text="${n.observaciones}">Observaciones</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+<!-- Script para validación de fechas y notificaciones -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Limitar fechas al mes actual en adelante
+        const hoy = new Date();
+        const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        const fechaMinima = primerDiaMes.toISOString().split("T")[0];
+
+        document.querySelector("input[name='fechaInicio']").setAttribute("min", fechaMinima);
+        document.querySelector("input[name='fechaFin']").setAttribute("min", fechaMinima);
+
+        // Mostrar notificaciones con SweetAlert2
+        const mensaje = document.getElementById("flash-success")?.textContent.trim();
+        const error = document.getElementById("flash-error")?.textContent.trim();
+
+        if (mensaje) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: mensaje,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        } else if (error) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: error,
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true
+            });
+        }
+    });
+</script>
 
 </body>
 </html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Módulo de Nómina</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+<main class="container-empleado">
+    <h2 class="titulo-reporte">Módulo de Nómina</h2>
+
+    <div class="container-cards">
+        <a th:href="@{/nomina-mensual}" class="card-opcion">
+            <h3>Generar Nómina</h3>
+            <p>Procesa el pago mensual para todos los empleados activos.</p>
+        </a>
+
+        <a th:href="@{/devengado}" class="card-opcion">
+            <h3>Devengados</h3>
+            <p>Consulta y filtra los valores devengados por cada empleado.</p>
+        </a>
+
+        <a th:href="@{/deduccion}" class="card-opcion">
+            <h3>Deducciones</h3>
+            <p>Visualiza y gestiona las deducciones aplicadas por período.</p>
+        </a>
+
+        <a th:href="@{/prestaciones}" class="card-opcion">
+            <h3>Prestaciones Sociales</h3>
+            <p>Consulta las cesantías, primas, vacaciones e intereses por empleado.</p>
+        </a>
+
+        <a th:href="@{/aporte-patronal}" class="card-opcion">
+            <h3>Aportes Patronales</h3>
+            <p>Consulta los aportes obligatorios realizados por el empleador por cada empleado.</p>
+        </a>
+    </div>
+</main>
+
+<footer th:replace="~{footer :: footer}"></footer>
+</body>
+</html>

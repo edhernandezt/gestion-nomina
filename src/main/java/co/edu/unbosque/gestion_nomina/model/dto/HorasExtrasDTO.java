@@ -5,8 +5,13 @@ import java.time.LocalDate;
 
 public class HorasExtrasDTO {
     private Integer idHoraExtra;
-    private Integer tipoHoraExtraId;
-    private Integer devengadoId;
+    private Integer idEmpleado;
+    private String primerNombre;
+    private String segundoNombre;
+    private String primerApellido;
+    private String segundoApellido;
+    private Integer idTipoHoraExtra;
+    private String descripcionTipo;
     private BigDecimal cantidadHoras;
     private BigDecimal valorHora;
     private BigDecimal totalPagado;
@@ -15,10 +20,15 @@ public class HorasExtrasDTO {
 
     public HorasExtrasDTO() {}
 
-    public HorasExtrasDTO(Integer idHoraExtra, Integer tipoHoraExtraId, Integer devengadoId, BigDecimal cantidadHoras, BigDecimal valorHora, BigDecimal totalPagado, LocalDate fechaInicio, LocalDate fechaFin) {
+    public HorasExtrasDTO(Integer idHoraExtra, Integer idEmpleado, String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, Integer idTipoHoraExtra, String descripcionTipo, BigDecimal cantidadHoras, BigDecimal valorHora, BigDecimal totalPagado, LocalDate fechaInicio, LocalDate fechaFin) {
         this.idHoraExtra = idHoraExtra;
-        this.tipoHoraExtraId = tipoHoraExtraId;
-        this.devengadoId = devengadoId;
+        this.idEmpleado = idEmpleado;
+        this.primerNombre = primerNombre;
+        this.segundoNombre = segundoNombre;
+        this.primerApellido = primerApellido;
+        this.segundoApellido = segundoApellido;
+        this.idTipoHoraExtra = idTipoHoraExtra;
+        this.descripcionTipo = descripcionTipo;
         this.cantidadHoras = cantidadHoras;
         this.valorHora = valorHora;
         this.totalPagado = totalPagado;
@@ -34,20 +44,60 @@ public class HorasExtrasDTO {
         this.idHoraExtra = idHoraExtra;
     }
 
-    public Integer getTipoHoraExtraId() {
-        return tipoHoraExtraId;
+    public Integer getIdEmpleado() {
+        return idEmpleado;
     }
 
-    public void setTipoHoraExtraId(Integer tipoHoraExtraId) {
-        this.tipoHoraExtraId = tipoHoraExtraId;
+    public void setIdEmpleado(Integer idEmpleado) {
+        this.idEmpleado = idEmpleado;
     }
 
-    public Integer getDevengadoId() {
-        return devengadoId;
+    public String getPrimerNombre() {
+        return primerNombre;
     }
 
-    public void setDevengadoId(Integer devengadoId) {
-        this.devengadoId = devengadoId;
+    public void setPrimerNombre(String primerNombre) {
+        this.primerNombre = primerNombre;
+    }
+
+    public String getSegundoNombre() {
+        return segundoNombre;
+    }
+
+    public void setSegundoNombre(String segundoNombre) {
+        this.segundoNombre = segundoNombre;
+    }
+
+    public String getPrimerApellido() {
+        return primerApellido;
+    }
+
+    public void setPrimerApellido(String primerApellido) {
+        this.primerApellido = primerApellido;
+    }
+
+    public String getSegundoApellido() {
+        return segundoApellido;
+    }
+
+    public void setSegundoApellido(String segundoApellido) {
+        this.segundoApellido = segundoApellido;
+    }
+
+    public Integer getIdTipoHoraExtra() {
+        return idTipoHoraExtra;
+    }
+
+    public void setIdTipoHoraExtra(Integer idTipoHoraExtra) {
+        this.idTipoHoraExtra = idTipoHoraExtra;
+    }
+
+    public String getDescripcionTipo() {
+        return descripcionTipo;
+    }
+
+    public void setDescripcionTipo(String descripcionTipo) {
+        this.descripcionTipo = descripcionTipo;
     }
 
     public BigDecimal getCantidadHoras() {

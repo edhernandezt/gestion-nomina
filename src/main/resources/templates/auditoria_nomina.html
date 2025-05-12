@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Auditoría de Nómina</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+<main class="container-empleado">
+    <h2 class="titulo-reporte">Auditoría de Nómina</h2>
+
+    <!-- Formulario de filtros -->
+    <form class="form-filtro" th:action="@{/auditoria-nomina}" method="get">
+        <label for="fechaInicio">Desde:</label>
+        <input type="date" id="fechaInicio" name="fechaInicio" th:value="${fechaInicio}" required>
+
+        <label for="fechaFin">Hasta:</label>
+        <input type="date" id="fechaFin" name="fechaFin" th:value="${fechaFin}" required>
+
+        <label for="usuario">Usuario:</label>
+        <input type="text" id="usuario" name="usuario" placeholder="Nombre de usuario" th:value="${usuario}" class="campo-busqueda"/>
+
+        <button type="submit" class="btn-control">Filtrar</button>
+    </form>
+
+    <!-- Tabla de auditoría -->
+    <div class="empleados-list">
+        <table>
+            <thead>
+            <tr>
+                <th>ID Auditoría</th>
+                <th>Empleado</th>
+                <th>Periodo</th>
+                <th>Total Pagado</th>
+                <th>Total Nómina</th>
+                <th>Fecha de Operación</th>
+                <th>Usuario</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${auditorias}">
+                <td th:text="${a.idAuditoria}">1</td>
+                <td th:text="${a.primerNombre + ' ' + a.segundoNombre + ' ' + a.primerApellido + ' ' + a.segundoApellido}">Empleado</td>
+                <td th:text="${#temporals.format(a.fechaInicio, 'dd/MM/yyyy')} + ' a ' + ${#temporals.format(a.fechaFin, 'dd/MM/yyyy')}">01/01/2025 a 31/01/2025</td>
+                <td th:text="${#numbers.formatDecimal(a.totalPagadoEmpleado, 0, 'COMMA', 2, 'POINT')}">$0</td>
+                <td th:text="${#numbers.formatDecimal(a.totalNomina, 0, 'COMMA', 2, 'POINT')}">$0</td>
+                <td th:text="${#temporals.format(a.fechaOperacion, 'dd/MM/yyyy HH:mm')}">08/05/2025</td>
+                <td th:text="${a.usuario}">admin</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const hoy = new Date();
+        const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        const fechaMin = primerDiaMes.toISOString().split("T")[0];
+
+        document.getElementById("fechaInicio").setAttribute("min", fechaMin);
+        document.getElementById("fechaFin").setAttribute("min", fechaMin);
+    });
+</script>
+
+</body>
+</html>

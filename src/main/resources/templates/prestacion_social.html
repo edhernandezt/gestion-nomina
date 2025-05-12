@@ -2,33 +2,62 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Prestaciones Sociales</title>
+    <title>Reporte de Prestaciones Sociales</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
 
-<div class="container mt-4">
-    <h2 class="mb-4">Prestaciones Sociales</h2>
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
 
-    <!-- Formulario para generar prestaciones -->
-    <form th:action="@{/prestaciones/generar}" method="post" class="row g-3 mb-4">
-        <div class="col-md-3">
-            <label for="fechaInicio" class="form-label">Fecha Inicio:</label>
-            <input type="date" id="fechaInicio" name="fechaInicio" class="form-control" required>
-        </div>
-        <div class="col-md-3">
-            <label for="fechaFin" class="form-label">Fecha Fin:</label>
-            <input type="date" id="fechaFin" name="fechaFin" class="form-control" required>
-        </div>
-        <div class="col-md-3 align-self-end">
-            <button type="submit" class="btn btn-primary">Generar Prestaciones</button>
-        </div>
+<main class="container-empleado">
+    <h4 class="titulo-reporte">Reporte de Prestaciones Sociales</h4>
+
+    <form th:action="@{/prestaciones}" method="get" class="form-filtro">
+        <label for="fechaInicio">Desde:</label>
+        <input type="date" id="fechaInicio" name="fechaInicio" th:value="${fechaInicio}">
+
+        <label for="fechaFin">Hasta:</label>
+        <input type="date" id="fechaFin" name="fechaFin" th:value="${fechaFin}">
+
+        <label for="keyword">Empleado:</label>
+        <input type="text" id="keyword" name="keyword" placeholder="Nombre o apellido" th:value="${keyword}" class="campo-busqueda"/>
+
+        <button type="submit" class="btn-control">Filtrar</button>
     </form>
 
-    <!-- Mensajes de éxito o error -->
-    <div th:if="${mensajePrestacion}" class="alert alert-success" th:text="${mensajePrestacion}"></div>
-    <div th:if="${errorPrestacion}" class="alert alert-danger" th:text="${errorPrestacion}"></div>
+    <div class="empleados-list">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Empleado</th>
+                <th>Cesantías</th>
+                <th>Intereses</th>
+                <th>Prima</th>
+                <th>Vacaciones</th>
+                <th>Total Prestaciones</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${prestaciones}">
+                <td th:text="${p.idPrestacion}">1</td>
+                <td th:text="${p.primerNombre + ' ' + p.segundoNombre + ' ' + p.primerApellido + ' ' + p.segundoApellido}">Empleado</td>
+                <td th:text="${#numbers.formatDecimal(p.cesantias, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(p.intereses, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(p.prima, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(p.vacaciones, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(p.totalPrestaciones, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#temporals.format(p.fechaInicio, 'yyyy-MM-dd')}">2025-01-01</td>
+                <td th:text="${#temporals.format(p.fechaFin, 'yyyy-MM-dd')}">2025-01-31</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
 
-</div>
-
+<footer th:replace="~{footer :: footer}"></footer>
 </body>
 </html>

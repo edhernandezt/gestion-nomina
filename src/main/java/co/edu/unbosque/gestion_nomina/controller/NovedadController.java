@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -34,16 +35,34 @@ public class NovedadController {
     }
 
     @GetMapping
-    public String mostrarVistaNovedad(Model model) {
+    public String mostrarVistaNovedad(
+            @RequestParam(name = "fechaInicio", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+            @RequestParam(name = "fechaFin", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            Model model
+    ) {
+        if (fechaInicio == null || fechaFin == null) {
+            LocalDate now = LocalDate.now();
+            fechaInicio = now.withDayOfMonth(1);
+            fechaFin = now.withDayOfMonth(now.lengthOfMonth());
+        }
+
+        if (keyword == null) {
+            keyword = "";
+        }
+
         List<EmpleadoDTO> empleados = empleadoService.findAll();
         empleados.sort(Comparator.comparing(EmpleadoDTO::getPrimerApellido));
 
         List<TipoNovedadDTO> tipos = tipoNovedadService.findAll();
-        List<NovedadDTO> novedades = novedadService.listarNovedades();
+        List<NovedadDTO> novedades = novedadService.findByFechasAndNombre(fechaInicio, fechaFin, keyword);
 
         model.addAttribute("empleados", empleados);
         model.addAttribute("tiposNovedad", tipos);
         model.addAttribute("novedades", novedades);
+        model.addAttribute("fechaInicio", fechaInicio);
+        model.addAttribute("fechaFin", fechaFin);
+        model.addAttribute("keyword", keyword);
 
         return "novedad";
     }
@@ -55,14 +74,20 @@ public class NovedadController {
             @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
             @RequestParam(value = "observaciones", required = false) String observaciones,
-            Model model) {
-        try {
-            novedadService.registrarNovedad(idEmpleado, idTipoNovedad, fechaInicio, fechaFin, observaciones);
-            model.addAttribute("mensajeNovedad", "Novedad registrada correctamente.");
-        } catch (Exception e) {
-            model.addAttribute("errorNovedad", "Error al registrar novedad: " + e.getMessage());
+            RedirectAttributes redirectAttributes) {
+
+        if (fechaFin.isBefore(fechaInicio)) {
+            redirectAttributes.addFlashAttribute("errorNovedad", "La fecha fin no puede ser anterior a la fecha inicio.");
+            return "redirect:/novedad";
         }
 
-        return "redirect:/novedad";
+        try {
+            novedadService.registrarNovedad(idEmpleado, idTipoNovedad, fechaInicio, fechaFin, observaciones);
+            redirectAttributes.addFlashAttribute("mensajeNovedad", "Novedad registrada correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorNovedad", "Error al registrar novedad: " + e.getMessage());
+        }
+
+        return "redirect:/novedad?fechaInicio=" + fechaInicio + "&fechaFin=" + fechaFin;
     }
 }

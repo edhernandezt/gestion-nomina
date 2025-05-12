@@ -24,26 +24,11 @@ public class DevengadoService implements IDevengadoService {
     }
 
     @Override
-    @Transactional
-    public void generarDevengadosMensual(LocalDate fechaInicio, LocalDate fechaFin) {
-        devengadoRepository.generarDevengadosMensual(fechaInicio, fechaFin);
-    }
-
-    @Override
     @Transactional(readOnly = true)
-    public List<DevengadoDTO> findAll() {
-        return devengadoRepository.listarDevengados().stream()
+    public List<DevengadoDTO> findByFechasAndNombre(LocalDate fechaInicio, LocalDate fechaFin, String nombre) {
+        return devengadoRepository.buscarPorNombreYFechas(fechaInicio, fechaFin, nombre)
+                .stream()
                 .map(devengado -> modelMapper.map(devengado, DevengadoDTO.class))
                 .toList();
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<DevengadoDTO> findByFechas(LocalDate fechaInicio, LocalDate fechaFin) {
-        return devengadoRepository.findByFechaInicioGreaterThanEqualAndFechaFinLessThanEqual(fechaInicio, fechaFin).stream()
-                .map(devengado -> modelMapper.map(devengado, DevengadoDTO.class))
-                .toList();
-    }
-
-
 }

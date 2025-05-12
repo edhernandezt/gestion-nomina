@@ -12,16 +12,11 @@ import java.util.List;
 @Repository
 public interface PrestacionSocialRepository extends JpaRepository<PrestacionSocial, Integer> {
 
-    @Procedure(procedureName = "sp_generar_prestaciones_sociales_mensual")
-    void generarPrestacionesMensual(
+    @Procedure(name = "sp_buscar_prestaciones_por_nombre")
+    List<PrestacionSocial> buscarPorNombreYFechas(
             @Param("pd_fecha_inicio") LocalDate fechaInicio,
-            @Param("pd_fecha_fin") LocalDate fechaFin
+            @Param("pd_fecha_fin") LocalDate fechaFin,
+            @Param("pv_nombre") String nombre
     );
 
-    @Procedure(name = "sp_listar_prestaciones")
-    List<PrestacionSocial> listarPrestaciones();
-
-    List<PrestacionSocial> findByFechaInicioGreaterThanEqualAndFechaFinLessThanEqual(
-            LocalDate fechaInicio, LocalDate fechaFin
-    );
 }

@@ -2,31 +2,64 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Deducciones</title>
+    <title>Reporte de Deducciones</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
 
-<div class="container mt-4">
-    <h2>Deducciones</h2>
-    <form th:action="@{/deduccion/generar}" method="post" class="mb-4">
-        <div class="row g-2">
-            <div class="col-md-3">
-                <label for="fechaInicioGen" class="form-label">Fecha Inicio:</label>
-                <input type="date" id="fechaInicioGen" name="fechaInicio" class="form-control" required>
-            </div>
-            <div class="col-md-3">
-                <label for="fechaFinGen" class="form-label">Fecha Fin:</label>
-                <input type="date" id="fechaFinGen" name="fechaFin" class="form-control" required>
-            </div>
-            <div class="col-md-3 align-self-end">
-                <button type="submit" class="btn btn-success">Generar Deducciones</button>
-            </div>
-        </div>
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+<main class="container-empleado">
+    <h4 class="titulo-reporte">Reporte de Deducciones</h4>
+
+    <form th:action="@{/deduccion}" method="get" class="form-filtro">
+        <label for="fechaInicio">Desde:</label>
+        <input type="date" id="fechaInicio" name="fechaInicio" th:value="${fechaInicio}">
+
+        <label for="fechaFin">Hasta:</label>
+        <input type="date" id="fechaFin" name="fechaFin" th:value="${fechaFin}">
+
+        <label for="keyword">Empleado:</label>
+        <input type="text" id="keyword" name="keyword" placeholder="Nombre o apellido" th:value="${keyword}" class="campo-busqueda"/>
+
+        <button type="submit" class="btn-control">Filtrar</button>
     </form>
 
-    <div th:if="${mensajeDeduccion}" class="alert alert-success" th:text="${mensajeDeduccion}"></div>
-    <div th:if="${errorDeduccion}" class="alert alert-danger" th:text="${errorDeduccion}"></div>
-</div>
+    <div class="empleados-list">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Empleado</th>
+                <th>Salud</th>
+                <th>Pensión</th>
+                <th>Fondo Solidaridad</th>
+                <th>ReteFuente</th>
+                <th>Días Descontados</th>
+                <th>Total</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="d : ${deducciones}">
+                <td th:text="${d.idDeduccion}">1</td>
+                <td th:text="${d.primerNombre + ' ' + d.segundoNombre + ' ' + d.primerApellido + ' ' + d.segundoApellido}">Empleado</td>
+                <td th:text="${#numbers.formatDecimal(d.salud, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(d.pension, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(d.fondoSolidaridad, 1, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(d.reteFuente, 1, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(d.descuentosDias, 1, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(d.totalDeducciones, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#temporals.format(d.fechaInicio, 'yyyy-MM-dd')}">2025-01-01</td>
+                <td th:text="${#temporals.format(d.fechaFin, 'yyyy-MM-dd')}">2025-01-31</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
 
+<footer th:replace="~{footer :: footer}"></footer>
 </body>
 </html>

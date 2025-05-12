@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Generar Desprendibles de Nómina</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+<main class="container-empleado">
+    <h4 class="titulo-reporte">Generar Desprendibles de Nómina</h4>
+
+    <form id="form-desprendibles" class="form-filtro">
+        <label for="fechaInicio">Desde:</label>
+        <input type="date" id="fechaInicio" name="fechaInicio" required>
+
+        <label for="fechaFin">Hasta:</label>
+        <input type="date" id="fechaFin" name="fechaFin" required>
+
+        <button type="submit" class="btn-control">Generar Desprendibles</button>
+    </form>
+</main>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const hoy = new Date();
+        const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+        const ultimoDiaMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
+
+        const inputInicio = document.getElementById("fechaInicio");
+        const inputFin = document.getElementById("fechaFin");
+
+        // Preseleccionar mes actual
+        inputInicio.value = primerDiaMes.toISOString().split("T")[0];
+        inputFin.value = ultimoDiaMes.toISOString().split("T")[0];
+
+        inputInicio.min = primerDiaMes.toISOString().split("T")[0];
+        inputFin.min = primerDiaMes.toISOString().split("T")[0];
+
+        // Evento de envío del formulario
+        document.getElementById("form-desprendibles").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const fechaInicio = inputInicio.value;
+            const fechaFin = inputFin.value;
+
+            if (fechaFin < fechaInicio) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Fechas inválidas',
+                    text: 'La fecha fin no puede ser anterior a la fecha de inicio.'
+                });
+                return;
+            }
+
+            try {
+                const response = await fetch(`/desprendibles/generar?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
+                if (!response.ok) {
+                    throw new Error("No se pudo generar el archivo ZIP.");
+                }
+
+                const blob = await response.blob();
+
+                if (blob.size === 0) {
+                    throw new Error("No se encontraron desprendibles para ese período.");
+                }
+
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `desprendibles_nomina_${fechaInicio}_a_${fechaFin}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Desprendibles generados!',
+                    text: 'Se descargó el archivo ZIP correctamente.',
+                    toast: true,
+                    position: 'top-end',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message || 'Ocurrió un error al generar los desprendibles.'
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

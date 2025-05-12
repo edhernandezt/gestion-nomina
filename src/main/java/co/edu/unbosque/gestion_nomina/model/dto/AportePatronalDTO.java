@@ -7,6 +7,10 @@ public class AportePatronalDTO {
 
     private Integer idAporte;
     private Integer idEmpleado;
+    private String primerNombre;
+    private String segundoNombre;
+    private String primerApellido;
+    private String segundoApellido;
     private Integer idFactorRiesgo;
     private BigDecimal cajaCompensacion;
     private BigDecimal salud;
@@ -22,9 +26,13 @@ public class AportePatronalDTO {
     public AportePatronalDTO() {
     }
 
-    public AportePatronalDTO(Integer idAporte, Integer idEmpleado, Integer idFactorRiesgo, BigDecimal cajaCompensacion, BigDecimal salud, BigDecimal pension, BigDecimal sena, BigDecimal icbf, BigDecimal riesgoLaboral, BigDecimal totalAportes, LocalDate fechaInicio, LocalDate fechaFin) {
+    public AportePatronalDTO(Integer idAporte, Integer idEmpleado, String primerNombre, String segundoNombre, String primerApellido, String segundoApellido, Integer idFactorRiesgo, BigDecimal cajaCompensacion, BigDecimal salud, BigDecimal pension, BigDecimal sena, BigDecimal icbf, BigDecimal riesgoLaboral, BigDecimal totalAportes, LocalDate fechaInicio, LocalDate fechaFin) {
         this.idAporte = idAporte;
         this.idEmpleado = idEmpleado;
+        this.primerNombre = primerNombre;
+        this.segundoNombre = segundoNombre;
+        this.primerApellido = primerApellido;
+        this.segundoApellido = segundoApellido;
         this.idFactorRiesgo = idFactorRiesgo;
         this.cajaCompensacion = cajaCompensacion;
         this.salud = salud;
@@ -51,6 +59,38 @@ public class AportePatronalDTO {
 
     public void setIdEmpleado(Integer idEmpleado) {
         this.idEmpleado = idEmpleado;
+    }
+
+    public String getPrimerNombre() {
+        return primerNombre;
+    }
+
+    public void setPrimerNombre(String primerNombre) {
+        this.primerNombre = primerNombre;
+    }
+
+    public String getSegundoNombre() {
+        return segundoNombre;
+    }
+
+    public void setSegundoNombre(String segundoNombre) {
+        this.segundoNombre = segundoNombre;
+    }
+
+    public String getPrimerApellido() {
+        return primerApellido;
+    }
+
+    public void setPrimerApellido(String primerApellido) {
+        this.primerApellido = primerApellido;
+    }
+
+    public String getSegundoApellido() {
+        return segundoApellido;
+    }
+
+    public void setSegundoApellido(String segundoApellido) {
+        this.segundoApellido = segundoApellido;
     }
 
     public Integer getIdFactorRiesgo() {

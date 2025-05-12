@@ -7,9 +7,5 @@ import java.util.List;
 
 public interface IPrestacionSocialService {
 
-    void generarPrestacionesMensual(LocalDate fechaInicio, LocalDate fechaFin);
-
-    List<PrestacionSocialDTO> findAll();
-
-    List<PrestacionSocialDTO> findByFechas(LocalDate fechaInicio, LocalDate fechaFin);
+    List<PrestacionSocialDTO> findByFechasAndNombre(LocalDate fechaInicio, LocalDate fechaFin, String nombre);
 }

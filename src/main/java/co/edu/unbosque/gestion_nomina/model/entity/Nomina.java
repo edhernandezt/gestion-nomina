@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "nomina")
 @NamedStoredProcedureQuery(
         name = "sp_generar_nomina_mensual",
         procedureName = "sp_generar_nomina_mensual",
@@ -14,12 +16,15 @@ import java.time.LocalDate;
         }
 )
 @NamedStoredProcedureQuery(
-        name = "sp_listar_nominas",
-        procedureName = "sp_listar_nominas",
-        resultClasses = Nomina.class
+        name = "sp_buscar_nominas_por_nombre",
+        procedureName = "sp_buscar_nominas_por_nombre",
+        resultClasses = Nomina.class,
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pv_nombre", type = String.class)
+        }
 )
-@Entity
-@Table(name = "nomina")
 public class Nomina {
 
     @Id

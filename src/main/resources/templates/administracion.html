@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Configuración</title>
+    <title>Administración</title>
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
@@ -12,7 +12,7 @@
 <nav th:replace="~{navbar :: navbar}"></nav>
 
 <main>
-    <h2 class="titulo-reporte">Configuración del Sistema</h2>
+    <h2 class="titulo-reporte">Administración del Sistema</h2>
 
 
     <div class="cards configuracion-cards">
@@ -26,6 +26,12 @@
             <h3>Gestión de Departamentos</h3>
             <p>Administra los departamentos disponibles.</p>
             <a th:href="@{/departamentos}" class="btn-control2">Departamentos</a>
+        </div>
+
+        <div class="card card-config">
+            <h3>Gestión de Auditorías</h3>
+            <p>Control de auditorías.</p>
+            <a th:href="@{/auditoria-nomina}" class="btn-control2">Auditorías</a>
         </div>
     </div>
 

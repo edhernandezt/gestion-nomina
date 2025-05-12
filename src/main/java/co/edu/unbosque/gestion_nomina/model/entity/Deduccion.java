@@ -4,21 +4,18 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@NamedStoredProcedureQuery(
-        name = "sp_generar_deducciones_mensual",
-        procedureName = "sp_generar_deducciones_mensual",
-        parameters = {
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
-                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class)
-        }
-)
-@NamedStoredProcedureQuery(
-        name = "sp_listar_deducciones",
-        procedureName = "sp_listar_deducciones",
-        resultClasses = Deduccion.class
-)
 @Entity
 @Table(name = "deducciones")
+@NamedStoredProcedureQuery(
+        name = "sp_buscar_deducciones_por_nombre",
+        procedureName = "sp_buscar_deducciones_por_nombre",
+        resultClasses = Deduccion.class,
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_inicio", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pd_fecha_fin", type = LocalDate.class),
+                @StoredProcedureParameter(mode = ParameterMode.IN, name = "pv_nombre", type = String.class)
+        }
+)
 public class Deduccion {
 
     @Id
