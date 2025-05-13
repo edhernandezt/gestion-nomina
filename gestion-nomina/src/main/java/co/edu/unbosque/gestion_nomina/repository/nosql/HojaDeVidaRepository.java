@@ -1,4 +1,4 @@
-package co.edu.unbosque.gestion_nomina.repository;
+package co.edu.unbosque.gestion_nomina.repository.nosql;
 
 import co.edu.unbosque.gestion_nomina.model.document.HojaDeVida;
 import org.springframework.data.mongodb.repository.MongoRepository;

@@ -1,7 +1,7 @@
 package co.edu.unbosque.gestion_nomina.service.implementations;
 
 import co.edu.unbosque.gestion_nomina.model.document.HojaDeVida;
-import co.edu.unbosque.gestion_nomina.repository.HojaDeVidaRepository;
+import co.edu.unbosque.gestion_nomina.repository.nosql.HojaDeVidaRepository;
 import co.edu.unbosque.gestion_nomina.service.interfaces.IHojaDeVidaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
