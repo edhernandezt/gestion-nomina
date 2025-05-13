@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Hojas de Vida</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+<main class="container-empleado">
+    <h2 class="titulo-reporte">Hojas de Vida</h2>
+
+    <div id="flash-success" th:if="${mensajeHoja}" th:text="${mensajeHoja}" style="display:none;"></div>
+
+    <div class="contenedor-formulario">
+        <form th:action="@{/hojas-de-vida/guardar}" method="post" th:object="${nuevaHoja}" class="formulario-empleado">
+            <h3>Registrar Hoja de Vida</h3>
+
+            <div class="campo-formulario">
+                <label>Tipo de Documento:</label>
+                <select th:field="*{tipoDocumento}" required>
+                    <option value="" disabled selected>Seleccione...</option>
+                    <option value="CC">Cédula de Ciudadanía</option>
+                    <option value="CE">Cédula de Extranjería</option>
+                    <option value="TI">Tarjeta de Identidad</option>
+                </select>
+            </div>
+
+            <div class="campo-formulario">
+                <label>Número de Documento:</label>
+                <input type="text" th:field="*{numeroDocumento}" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label>Primer Nombre:</label>
+                <input type="text" th:field="*{primerNombre}" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label>Segundo Nombre:</label>
+                <input type="text" th:field="*{segundoNombre}">
+            </div>
+
+            <div class="campo-formulario">
+                <label>Primer Apellido:</label>
+                <input type="text" th:field="*{primerApellido}" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label>Segundo Apellido:</label>
+                <input type="text" th:field="*{segundoApellido}">
+            </div>
+
+            <div class="campo-formulario">
+                <label>Fecha de Nacimiento:</label>
+                <input type="date" th:field="*{fechaNacimiento}" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label>Correo Electrónico:</label>
+                <input type="email" th:field="*{correo}" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label>Teléfono:</label>
+                <input type="text" th:field="*{telefono}">
+            </div>
+
+            <div class="campo-formulario">
+                <label>Dirección:</label>
+                <input type="text" th:field="*{direccion}">
+            </div>
+
+            <div class="campo-formulario">
+                <label>Nivel Educativo:</label>
+                <select th:field="*{nivelEducativo}">
+                    <option value="" disabled selected>Seleccione...</option>
+                    <option value="Primaria">Primaria</option>
+                    <option value="Secundaria">Secundaria / Bachillerato</option>
+                    <option value="Técnico">Técnico</option>
+                    <option value="Tecnólogo">Tecnólogo</option>
+                    <option value="Universitario">Universitario</option>
+                    <option value="Postgrado">Postgrado</option>
+                    <option value="Maestría">Maestría</option>
+                    <option value="Doctorado">Doctorado</option>
+                </select>
+            </div>
+
+            <div class="campo-formulario">
+                <label>Estudios (separados por coma):</label>
+                <input type="text" name="estudiosStr">
+            </div>
+
+            <div class="campo-formulario">
+                <label>Habilidades (separadas por coma):</label>
+                <input type="text" name="habilidadesStr">
+            </div>
+
+            <div class="campo-formulario">
+                <label>Certificaciones (separadas por coma):</label>
+                <input type="text" name="certificacionesStr">
+            </div>
+
+            <div class="campo-formulario">
+                <label>Experiencias Laborales:</label>
+                <div id="experiencias-container"></div>
+                <button type="button" class="btn-agregar" onclick="agregarExperiencia()">Agregar Experiencia</button>
+            </div>
+
+            <button type="submit" class="btn-control">Guardar Hoja de Vida</button>
+        </form>
+    </div>
+
+    <form th:action="@{/hojas-de-vida}" method="get" class="form-filtro">
+        <input type="text" name="keyword" placeholder="Buscar por nombre o documento" th:value="${keyword}" class="campo-busqueda">
+        <button type="submit" class="btn-control">Buscar</button>
+    </form>
+
+    <div class="empleados-list">
+        <table>
+            <thead>
+            <tr>
+                <th>Documento</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="hoja : ${hojas}">
+                <td th:text="${hoja.numeroDocumento}"></td>
+                <td th:text="${hoja.primerNombre + ' ' + hoja.segundoNombre + ' ' + hoja.primerApellido + ' ' + hoja.segundoApellido}"></td>
+                <td th:text="${hoja.correo}"></td>
+                <td th:text="${hoja.telefono}"></td>
+                <td>
+                    <button type="button"
+                            class="btn-detalle"
+                            onclick="verDetalle(this)"
+                            th:data-id="${hoja.numeroDocumento}"
+                            th:data-nombre="${hoja.primerNombre + ' ' + hoja.segundoNombre + ' ' + hoja.primerApellido + ' ' + hoja.segundoApellido}"
+                            th:data-correo="${hoja.correo}"
+                            th:data-telefono="${hoja.telefono}"
+                            th:data-direccion="${hoja.direccion}"
+                            th:data-niveleducativo="${hoja.nivelEducativo}"
+                            th:data-estudios="${#strings.arrayJoin(hoja.estudios, ', ')}"
+                            th:data-habilidades="${#strings.arrayJoin(hoja.habilidades, ', ')}"
+                            th:data-certificaciones="${#strings.arrayJoin(hoja.certificaciones, ', ')}">
+                        Ver Detalles
+                    </button>
+                    <form th:action="@{'/hojas-de-vida/eliminar/' + ${hoja.id}}" method="post"
+                          onsubmit="return confirm('¿Estás seguro de eliminar esta hoja de vida?');">
+                        <button type="submit" class="btn-eliminar">Eliminar</button>
+                    </form>
+
+                    <div class="experiencias-ocultas" style="display: none;">
+                        <div th:each="exp : ${hoja.experiencias}"
+                             class="exp-item"
+                             th:data-empresa="${exp.empresa}"
+                             th:data-cargo="${exp.cargo}"
+                             th:data-fechainicio="${exp.fechaInicio}"
+                             th:data-fechafin="${exp.fechaFin}"
+                             th:data-descripcion="${exp.descripcion}">
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<!-- Modal Detalle -->
+<div id="modalDetalle" class="modal" style="display:none;">
+    <div class="modal-contenido">
+        <span class="cerrar" onclick="cerrarModal()">&times;</span>
+        <h3>Detalles de Hoja de Vida</h3>
+        <p><strong>Documento:</strong> <span id="modalDocumento"></span></p>
+        <p><strong>Nombre Completo:</strong> <span id="modalNombre"></span></p>
+        <p><strong>Correo:</strong> <span id="modalCorreo"></span></p>
+        <p><strong>Teléfono:</strong> <span id="modalTelefono"></span></p>
+        <p><strong>Dirección:</strong> <span id="modalDireccion"></span></p>
+        <p><strong>Nivel Educativo:</strong> <span id="modalNivelEducativo"></span></p>
+        <p><strong>Estudios:</strong> <span id="modalEstudios"></span></p>
+        <p><strong>Habilidades:</strong> <span id="modalHabilidades"></span></p>
+        <p><strong>Certificaciones:</strong> <span id="modalCertificaciones"></span></p>
+
+        <h4>Experiencia Laboral</h4>
+        <table>
+            <thead>
+            <tr>
+                <th>Empresa</th>
+                <th>Cargo</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Descripción</th>
+            </tr>
+            </thead>
+            <tbody id="modalExperiencias"></tbody>
+        </table>
+    </div>
+</div>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const mensaje = document.getElementById("flash-success")?.textContent.trim();
+        if (mensaje) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: mensaje,
+                showConfirmButton: false,
+                timer: 3000
+            });
+        }
+    });
+
+    function agregarExperiencia() {
+        const contenedor = document.getElementById("experiencias-container");
+        const index = contenedor.children.length;
+
+        const div = document.createElement("div");
+        div.classList.add("experiencia-item");
+
+        div.innerHTML = `
+            <div class="fila-experiencia">
+                <div class="campo-formulario">
+                    <label>Empresa:</label>
+                    <input type="text" name="experiencias[${index}].empresa" required>
+                </div>
+                <div class="campo-formulario">
+                    <label>Cargo:</label>
+                    <input type="text" name="experiencias[${index}].cargo" required>
+                </div>
+            </div>
+
+            <div class="fila-experiencia">
+                <div class="campo-formulario">
+                    <label>Fecha Inicio:</label>
+                    <input type="date" name="experiencias[${index}].fechaInicio" required>
+                </div>
+                <div class="campo-formulario">
+                    <label>Fecha Fin:</label>
+                    <input type="date" name="experiencias[${index}].fechaFin" required>
+                </div>
+            </div>
+
+            <div class="campo-formulario">
+                <label>Descripción:</label>
+                <textarea name="experiencias[${index}].descripcion" rows="2"></textarea>
+            </div>
+
+            <hr/>
+        `;
+        contenedor.appendChild(div);
+    }
+
+    function verDetalle(btn) {
+        document.getElementById("modalDocumento").textContent = btn.dataset.id;
+        document.getElementById("modalNombre").textContent = btn.dataset.nombre;
+        document.getElementById("modalCorreo").textContent = btn.dataset.correo;
+        document.getElementById("modalTelefono").textContent = btn.dataset.telefono;
+        document.getElementById("modalDireccion").textContent = btn.dataset.direccion;
+        document.getElementById("modalNivelEducativo").textContent = btn.dataset.niveleducativo;
+        document.getElementById("modalEstudios").textContent = btn.dataset.estudios;
+        document.getElementById("modalHabilidades").textContent = btn.dataset.habilidades;
+        document.getElementById("modalCertificaciones").textContent = btn.dataset.certificaciones;
+
+        const row = btn.closest("tr");
+        const experienciaContainer = row.querySelector(".experiencias-ocultas");
+        const experienciasBody = document.getElementById("modalExperiencias");
+        experienciasBody.innerHTML = "";
+
+        if (experienciaContainer) {
+            experienciaContainer.querySelectorAll(".exp-item").forEach(item => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${item.dataset.empresa}</td>
+                <td>${item.dataset.cargo}</td>
+                <td>${item.dataset.fechainicio}</td>
+                <td>${item.dataset.fechafin}</td>
+                <td>${item.dataset.descripcion}</td>
+            `;
+                experienciasBody.appendChild(tr);
+            });
+        }
+
+        document.getElementById("modalDetalle").style.display = "block";
+    }
+
+
+    function cerrarModal() {
+        document.getElementById("modalDetalle").style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        const modal = document.getElementById("modalDetalle");
+        if (event.target === modal) {
+            cerrarModal();
+        }
+    }
+</script>
+
+</body>
+</html>

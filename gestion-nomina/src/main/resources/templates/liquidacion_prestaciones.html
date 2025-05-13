@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liquidación de Prestaciones Sociales</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+<main class="container-empleado">
+    <h4 class="titulo-reporte">Liquidación de Prestaciones Sociales</h4>
+
+    <!-- Mensajes flash -->
+    <div id="flash-success" th:if="${mensajeLiquidacion != null}" th:text="${mensajeLiquidacion}" hidden></div>
+    <div id="flash-error" th:if="${errorLiquidacion != null}" th:text="${errorLiquidacion}" hidden></div>
+
+    <!-- Formulario para generar liquidaciones -->
+    <form th:action="@{/liquidacion-prestaciones/generar}" method="post" class="form-filtro">
+        <div class="fila-formulario">
+            <label for="anio">Año:</label>
+            <input type="number" id="anio" name="anio" th:value="${anio}" min="2000" max="2100" required>
+
+            <label for="semestre">Semestre:</label>
+            <select id="semestre" name="semestre" required>
+                <option th:value="1" th:selected="${semestre == 1}">Enero - Junio</option>
+                <option th:value="2" th:selected="${semestre == 2}">Julio - Diciembre</option>
+            </select>
+
+            <button type="submit" class="btn-control">Generar Liquidaciones</button>
+        </div>
+    </form>
+
+    <!-- Filtro para consultar liquidaciones -->
+    <form th:action="@{/liquidacion-prestaciones}" method="get" class="form-filtro">
+        <div class="fila-formulario">
+            <label for="anioBusq">Año:</label>
+            <input type="number" id="anioBusq" name="anio" th:value="${anio}" min="2000" max="2100" required>
+
+            <label for="semestreBusq">Semestre:</label>
+            <select id="semestreBusq" name="semestre">
+                <option th:value="1" th:selected="${semestre == 1}">Enero - Junio</option>
+                <option th:value="2" th:selected="${semestre == 2}">Julio - Diciembre</option>
+            </select>
+
+            <label for="nombre">Empleado:</label>
+            <input type="text" id="nombre" name="nombre" th:value="${nombre}" placeholder="Nombre o apellido" class="campo-busqueda">
+
+            <button type="submit" class="btn-control">Buscar</button>
+        </div>
+    </form>
+
+    <!-- Tabla de resultados -->
+    <div class="empleados-list">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Empleado</th>
+                <th>Año</th>
+                <th>Semestre</th>
+                <th>Cesantías</th>
+                <th>Intereses</th>
+                <th>Prima</th>
+                <th>Vacaciones</th>
+                <th>Total</th>
+                <th>Generado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="l : ${liquidaciones}">
+                <td th:text="${l.idLiquidacion}">1</td>
+                <td th:text="${l.primerNombre + ' ' + l.segundoNombre + ' ' + l.primerApellido + ' ' + l.segundoApellido}">Empleado</td>
+                <td th:text="${l.anio}">2025</td>
+                <td th:text="${l.semestre}">1</td>
+                <td th:text="${#numbers.formatDecimal(l.cesantias, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(l.intereses, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(l.prima, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(l.vacaciones, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#numbers.formatDecimal(l.totalLiquidacion, 0, 'COMMA', 2, 'POINT')}">$0.00</td>
+                <td th:text="${#temporals.format(l.fechaGeneracion, 'dd/MM/yyyy HH:mm')}">01/01/2025</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const mensaje = document.getElementById("flash-success")?.textContent.trim();
+        const error = document.getElementById("flash-error")?.textContent.trim();
+
+        if (mensaje) {
+            Swal.fire({
+                toast: true,
+                icon: 'success',
+                title: mensaje,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        } else if (error) {
+            Swal.fire({
+                toast: true,
+                icon: 'error',
+                title: error,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
