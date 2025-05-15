@@ -360,5 +360,7 @@ CREATE TABLE auditoria_nomina (
     total_pagado_empleado DECIMAL(18,2) NOT NULL,
     total_nomina DECIMAL(18,2) NOT NULL,
     fecha_operacion DATETIME NOT NULL DEFAULT GETDATE(),
-    usuario NVARCHAR(100) NOT NULL
+    usuario NVARCHAR(100) NOT NULL,
+
+	FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado)
 );
