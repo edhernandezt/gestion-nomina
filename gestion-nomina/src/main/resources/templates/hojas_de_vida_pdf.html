@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Hojas de Vida</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<header th:replace="~{header :: header}"></header>
+<nav th:replace="~{navbar :: navbar}"></nav>
+
+<main class="container-empleado">
+    <h2 class="titulo-reporte">Subir Hoja de Vida (PDF)</h2>
+
+    <!-- Flash messages -->
+    <div id="flash-success" th:if="${mensajeHoja}" th:text="${mensajeHoja}" style="display: none;"></div>
+    <div id="flash-error" th:if="${errorHoja}" th:text="${errorHoja}" style="display: none;"></div>
+
+    <!-- Formulario de carga -->
+    <div class="contenedor-formulario">
+        <form th:action="@{/hojas-de-vida/subir}" method="post" enctype="multipart/form-data" class="formulario-empleado">
+            <div class="campo-formulario">
+                <label>Número de Documento:</label>
+                <input type="text" name="numeroDocumento" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label>Archivo PDF:</label>
+                <input type="file" name="archivo" accept="application/pdf" required>
+            </div>
+
+            <div class="botones-formulario">
+                <button type="submit" class="btn-control">Subir PDF</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Formulario de búsqueda -->
+    <form th:action="@{/hojas-de-vida}" method="get" class="form-filtro">
+        <label for="keyword">Buscar por documento:</label>
+        <input type="text" id="keyword" name="keyword" placeholder="Número de documento" th:value="${keyword}" class="campo-busqueda">
+        <button type="submit" class="btn-control">Buscar</button>
+    </form>
+
+    <!-- Tabla de resultados -->
+    <h2 class="titulo-reporte">Hojas de Vida Registradas</h2>
+    <div class="empleados-list">
+        <table>
+            <thead>
+            <tr>
+                <th>Documento</th>
+                <th>Nombre del Archivo</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="archivo : ${archivos}">
+                <td th:text="${archivo.numeroDocumento}">123456</td>
+                <td th:text="${archivo.nombreArchivoOriginal}">archivo.pdf</td>
+                <td th:text="${archivo.fechaSubida}">2025-05-25</td>
+                <td>
+                    <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-start;">
+
+                        <!-- Ver PDF -->
+                        <a th:href="@{'/hojas-de-vida/ver/' + ${archivo.gridFsId}}" class="btn-ver" target="_blank">Ver PDF</a>
+
+                        <!-- Actualizar PDF -->
+                        <form th:action="@{'/hojas-de-vida/actualizar/' + ${archivo.id}}" method="post"
+                              enctype="multipart/form-data">
+                            <div class="campo-formulario">
+                                <input type="file" name="archivoNuevo" accept="application/pdf" required>
+                                <button type="submit" class="btn-control" style="width: fit-content; margin-top: 4px;">Actualizar</button>
+                            </div>
+                        </form>
+
+                        <!-- Eliminar PDF -->
+                        <form th:action="@{'/hojas-de-vida/eliminar/' + ${archivo.id}}" method="post" style="width: 100%;"
+                              onsubmit="return confirm('¿Estás seguro de eliminar esta hoja de vida?');">
+                            <button type="submit" class="btn-eliminar">Eliminar</button>
+                        </form>
+
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{footer :: footer}"></footer>
+
+<!-- Script para SweetAlert2 -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const success = document.getElementById("flash-success")?.textContent.trim();
+        const error = document.getElementById("flash-error")?.textContent.trim();
+
+        if (success) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: success,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        } else if (error) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: error,
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
